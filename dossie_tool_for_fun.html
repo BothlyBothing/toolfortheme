@@ -11,25 +11,26 @@
             box-sizing: border-box;
         }
 
+        @font-face {
+            font-family: 'CyberFont';
+            src: local('Courier New'), local('Consolas'), monospace;
+        }
+
         :root {
-            --primary: #00ffff;
-            --primary-dim: #008b8b;
-            --secondary: #ff00ff;
-            --bg-dark: #0a0f14;
-            --bg-panel: #0d1a24;
-            --text-main: #e0f0f0;
-            --text-dim: #6a8a9a;
-            --danger: #ff4444;
-            --success: #44ff44;
-            --warning: #ffaa00;
+            --neon-blue: #00f0ff;
+            --neon-green: #00ff41;
+            --dark-bg: #0a0f14;
+            --panel-bg: rgba(0, 30, 40, 0.85);
+            --border-color: #00f0ff;
         }
 
         body {
-            font-family: 'Courier New', monospace;
-            background: var(--bg-dark);
-            color: var(--text-main);
+            font-family: 'Courier New', 'Consolas', monospace;
+            background: var(--dark-bg);
+            color: var(--neon-blue);
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
         }
 
         /* Scan lines effect */
@@ -42,8 +43,8 @@
             height: 100%;
             background: repeating-linear-gradient(
                 0deg,
-                rgba(0, 0, 0, 0.1) 0px,
-                rgba(0, 0, 0, 0.1) 1px,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
                 transparent 1px,
                 transparent 2px
             );
@@ -52,181 +53,404 @@
         }
 
         /* CRT flicker */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                ellipse at center,
+                transparent 0%,
+                rgba(0, 0, 0, 0.3) 100%
+            );
+            pointer-events: none;
+            z-index: 999;
+            animation: flicker 0.15s infinite;
+        }
+
         @keyframes flicker {
             0% { opacity: 0.97; }
             50% { opacity: 1; }
             100% { opacity: 0.98; }
         }
 
-        .app-container {
-            animation: flicker 0.15s infinite;
-            min-height: 100vh;
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         /* Header */
         .header {
-            background: linear-gradient(180deg, var(--bg-panel) 0%, transparent 100%);
-            border-bottom: 2px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding: 20px;
-            position: relative;
-        }
-
-        .header::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary);
-            box-shadow: 0 0 10px var(--primary);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            background: var(--panel-bg);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
         }
 
         .header h1 {
-            color: var(--primary);
-            text-shadow: 0 0 10px var(--primary);
-            font-size: 1.8rem;
+            font-size: 24px;
+            text-transform: uppercase;
             letter-spacing: 3px;
+            text-shadow: 0 0 10px var(--neon-blue);
+            animation: glitch 3s infinite;
         }
 
-        .header-nav {
-            margin-top: 10px;
+        @keyframes glitch {
+            0%, 100% { text-shadow: 0 0 10px var(--neon-blue); }
+            92% { text-shadow: 0 0 10px var(--neon-blue); }
+            93% { text-shadow: 2px 0 10px #ff0000, -2px 0 10px #0000ff; }
+            94% { text-shadow: 0 0 10px var(--neon-blue); }
         }
 
         .btn {
             background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            padding: 8px 16px;
+            border: 2px solid var(--border-color);
+            color: var(--neon-blue);
+            padding: 10px 20px;
+            font-family: inherit;
+            font-size: 14px;
             cursor: pointer;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            transition: all 0.3s;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            border-radius: 5px;
         }
 
         .btn:hover {
-            background: var(--primary);
-            color: var(--bg-dark);
-            box-shadow: 0 0 15px var(--primary);
+            background: var(--border-color);
+            color: var(--dark-bg);
+            box-shadow: 0 0 20px var(--neon-blue);
         }
 
         .btn-danger {
-            border-color: var(--danger);
-            color: var(--danger);
+            border-color: #ff4444;
+            color: #ff4444;
         }
 
         .btn-danger:hover {
-            background: var(--danger);
+            background: #ff4444;
             color: white;
-            box-shadow: 0 0 15px var(--danger);
+            box-shadow: 0 0 20px #ff4444;
         }
 
         .btn-success {
-            border-color: var(--success);
-            color: var(--success);
+            border-color: var(--neon-green);
+            color: var(--neon-green);
         }
 
         .btn-success:hover {
-            background: var(--success);
-            color: var(--bg-dark);
-            box-shadow: 0 0 15px var(--success);
+            background: var(--neon-green);
+            color: var(--dark-bg);
+            box-shadow: 0 0 20px var(--neon-green);
         }
 
-        /* Main content */
-        .main-content {
-            padding: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* Grid layout for dossier */
+        /* Dossier Grid */
         .dossier-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .dossier-card {
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            background: var(--panel-bg);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dossier-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-green));
+        }
+
+        .dossier-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.3);
+        }
+
+        .dossier-card .avatar {
+            width: 100px;
+            height: 100px;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            object-fit: cover;
+            margin-bottom: 15px;
+            background: rgba(0, 240, 255, 0.1);
+        }
+
+        .dossier-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .dossier-card .info {
+            font-size: 12px;
+            line-height: 1.8;
+            opacity: 0.8;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        .status-alive {
+            background: rgba(0, 255, 65, 0.2);
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+        }
+
+        .status-dead {
+            background: rgba(255, 68, 68, 0.2);
+            border: 1px solid #ff4444;
+            color: #ff4444;
+        }
+
+        .status-missing {
+            background: rgba(255, 165, 0, 0.2);
+            border: 1px solid orange;
+            color: orange;
+        }
+
+        .status-unknown {
+            background: rgba(128, 128, 128, 0.2);
+            border: 1px solid gray;
+            color: gray;
+        }
+
+        /* Dossier View */
+        .dossier-view {
             display: grid;
             grid-template-columns: 350px 1fr;
             gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .dossier-view {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            background: var(--panel-bg);
             margin-bottom: 20px;
         }
 
-        .dossier-bottom {
+        .panel-title {
+            font-size: 16px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .avatar-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .avatar-large {
+            width: 250px;
+            height: 250px;
+            border: 3px solid var(--border-color);
+            border-radius: 10px;
+            object-fit: cover;
+            background: rgba(0, 240, 255, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .field {
+            margin-bottom: 15px;
+        }
+
+        .field-label {
+            font-size: 12px;
+            opacity: 0.7;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .field-value {
+            font-size: 16px;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: rgba(0, 240, 255, 0.05);
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .field-value:hover {
+            background: rgba(0, 240, 255, 0.1);
+            border-color: var(--neon-green);
+        }
+
+        .field-value[contenteditable="true"]:focus {
+            outline: none;
+            border-color: var(--neon-green);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-green));
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .progress-text {
+            font-size: 12px;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        /* List Items */
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin-bottom: 8px;
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .list-item-text {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .list-item-delete {
+            background: transparent;
+            border: 1px solid #ff4444;
+            color: #ff4444;
+            padding: 3px 8px;
+            cursor: pointer;
+            font-size: 12px;
+            border-radius: 3px;
+            margin-left: 10px;
+        }
+
+        .list-item-delete:hover {
+            background: #ff4444;
+            color: white;
+        }
+
+        .add-item-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .add-item-input {
+            flex: 1;
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--neon-blue);
+            padding: 8px 12px;
+            font-family: inherit;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+
+        .add-item-input::placeholder {
+            color: rgba(0, 240, 255, 0.5);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--neon-blue);
+            padding: 12px;
+            font-family: inherit;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--neon-green);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+
+        .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
 
-        /* Panels */
-        .panel {
-            background: var(--bg-panel);
-            border: 1px solid var(--primary-dim);
-            position: relative;
-            padding: 15px;
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .panel::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: -1px;
-            width: 20px;
-            height: 20px;
-            border-top: 2px solid var(--primary);
-            border-left: 2px solid var(--primary);
-        }
-
-        .panel::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            right: -1px;
-            width: 20px;
-            height: 20px;
-            border-bottom: 2px solid var(--primary);
-            border-right: 2px solid var(--primary);
-        }
-
-        .panel-header {
-            color: var(--primary);
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--primary-dim);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        /* Avatar section */
-        .avatar-container {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .avatar-frame {
-            width: 200px;
-            height: 200px;
-            border: 2px solid var(--primary);
-            margin: 0 auto 10px;
-            overflow: hidden;
-            background: #000;
-            position: relative;
-        }
-
-        .avatar-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .avatar-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-dim);
-            font-size: 3rem;
-        }
-
+        /* File Input */
         .file-input-wrapper {
             position: relative;
             overflow: hidden;
@@ -243,921 +467,562 @@
             height: 100%;
         }
 
-        /* Info fields */
-        .info-row {
-            margin-bottom: 12px;
+        /* Navigation */
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: var(--neon-blue);
+            text-decoration: none;
+            font-size: 14px;
         }
 
-        .info-label {
-            color: var(--primary);
-            font-size: 0.85rem;
-            margin-bottom: 5px;
-            text-transform: uppercase;
+        .nav-back:hover {
+            color: var(--neon-green);
         }
 
-        .info-value {
-            color: var(--text-main);
-            font-size: 1rem;
-            padding: 8px;
-            background: rgba(0, 255, 255, 0.05);
-            border: 1px solid var(--primary-dim);
-            min-height: 35px;
-        }
-
-        .info-value.editable {
-            cursor: pointer;
-        }
-
-        .info-value.editable:hover {
-            border-color: var(--primary);
-            background: rgba(0, 255, 255, 0.1);
-        }
-
-        .info-value input, .info-value textarea, .info-value select {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            font-family: 'Courier New', monospace;
-            font-size: 1rem;
-            padding: 5px;
-        }
-
-        .info-value input:focus, .info-value textarea:focus, .info-value select:focus {
-            outline: none;
-            border-bottom: 1px solid var(--primary);
-        }
-
-        .info-value textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        /* Progress bar */
-        .progress-container {
-            width: 100%;
-            height: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--primary-dim);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-dim), var(--primary));
-            transition: width 0.5s ease;
-            box-shadow: 0 0 10px var(--primary);
-        }
-
-        .progress-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 0.75rem;
-            color: var(--text-main);
-            text-shadow: 1px 1px 2px black;
-        }
-
-        /* Status badge */
-        .status-badge {
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 3px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .status-alive {
-            background: rgba(68, 255, 68, 0.2);
-            color: var(--success);
-            border: 1px solid var(--success);
-        }
-
-        .status-dead {
-            background: rgba(255, 68, 68, 0.2);
-            color: var(--danger);
-            border: 1px solid var(--danger);
-        }
-
-        .status-missing {
-            background: rgba(255, 170, 0, 0.2);
-            color: var(--warning);
-            border: 1px solid var(--warning);
-        }
-
-        .status-unknown {
-            background: rgba(100, 100, 100, 0.2);
-            color: var(--text-dim);
-            border: 1px solid var(--text-dim);
-        }
-
-        /* Bullet list */
-        .bullet-list {
-            list-style: none;
-        }
-
-        .bullet-list li {
-            padding: 8px 0;
-            padding-left: 20px;
-            position: relative;
-            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
-        }
-
-        .bullet-list li::before {
-            content: '▸';
-            position: absolute;
-            left: 0;
-            color: var(--primary);
-        }
-
-        .bullet-list li:last-child {
-            border-bottom: none;
-        }
-
-        .bullet-list textarea {
-            width: 100%;
-            min-height: 60px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--primary-dim);
-            color: var(--text-main);
-            font-family: 'Courier New', monospace;
-            padding: 8px;
-            resize: vertical;
-        }
-
-        /* Dashboard grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .dossier-card {
-            background: var(--bg-panel);
-            border: 1px solid var(--primary-dim);
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .dossier-card::before {
-            content: '';
-            position: absolute;
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 3px;
-            background: var(--primary);
-        }
-
-        .dossier-card:hover {
-            border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-            transform: translateY(-5px);
-        }
-
-        .dossier-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .dossier-card-title {
-            color: var(--primary);
-            font-size: 1.2rem;
-            text-transform: uppercase;
-        }
-
-        .dossier-card-id {
-            color: var(--text-dim);
-            font-size: 0.8rem;
-        }
-
-        .dossier-card-avatar {
-            width: 80px;
-            height: 80px;
-            border: 1px solid var(--primary-dim);
-            margin: 0 auto 15px;
-            overflow: hidden;
-            background: #000;
-        }
-
-        .dossier-card-avatar img {
-            width: 100%;
             height: 100%;
-            object-fit: cover;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
         }
 
-        .dossier-card-info {
-            font-size: 0.85rem;
-            color: var(--text-dim);
+        .modal {
+            background: var(--dark-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 0 50px rgba(0, 240, 255, 0.3);
         }
 
-        .dossier-card-info p {
-            margin: 5px 0;
+        .modal-title {
+            font-size: 20px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
-        .dossier-card-actions {
-            margin-top: 15px;
+        .modal-actions {
             display: flex;
             gap: 10px;
-        }
-
-        .dossier-card-actions .btn {
-            flex: 1;
-            font-size: 0.8rem;
-            padding: 6px 10px;
-        }
-
-        /* Navigation */
-        .nav-breadcrumb {
-            margin-bottom: 20px;
-        }
-
-        .nav-breadcrumb a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .nav-breadcrumb a:hover {
-            text-decoration: underline;
-        }
-
-        .nav-breadcrumb span {
-            color: var(--text-dim);
-            margin: 0 10px;
-        }
-
-        /* Form styles */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            color: var(--primary);
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--primary-dim);
-            color: var(--text-main);
-            font-family: 'Courier New', monospace;
-            padding: 12px;
-            font-size: 1rem;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        /* Action buttons */
-        .action-bar {
-            display: flex;
-            gap: 15px;
+            justify-content: center;
             margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid var(--primary-dim);
         }
 
-        /* Glitch effect */
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
-        }
-
-        .glitch {
-            animation: glitch 0.5s infinite;
-            display: inline-block;
-        }
-
-        /* Hidden sections */
+        /* Hidden */
         .hidden {
             display: none !important;
         }
 
-        /* Responsive */
-        @media (max-width: 900px) {
-            .dossier-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .dossier-bottom {
-                grid-template-columns: 1fr;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Add item button */
-        .add-item-btn {
-            background: transparent;
-            border: 1px dashed var(--primary-dim);
-            color: var(--primary-dim);
-            padding: 10px;
+        /* Range Input */
+        input[type=range] {
             width: 100%;
-            cursor: pointer;
-            font-family: 'Courier New', monospace;
-            margin-top: 10px;
-            transition: all 0.3s;
-        }
-
-        .add-item-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: rgba(0, 255, 255, 0.05);
-        }
-
-        .remove-item-btn {
+            -webkit-appearance: none;
             background: transparent;
-            border: none;
-            color: var(--danger);
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--neon-blue);
             cursor: pointer;
-            padding: 5px;
-            font-size: 1.2rem;
-            float: right;
+            border-radius: 50%;
+            margin-top: -8px;
+            box-shadow: 0 0 10px var(--neon-blue);
         }
 
-        .remove-item-btn:hover {
-            color: #ff6666;
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
         }
 
-        /* Empty state */
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: var(--text-dim);
+            opacity: 0.6;
         }
 
         .empty-state h2 {
-            color: var(--primary-dim);
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
-        .empty-state .btn {
+        /* Timestamps */
+        .timestamps {
+            font-size: 11px;
+            opacity: 0.5;
             margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Select dropdown styling */
+        .form-select {
+            cursor: pointer;
+        }
+
+        .form-select option {
+            background: var(--dark-bg);
+            color: var(--neon-blue);
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
+    <div class="container">
         <!-- Header -->
         <header class="header">
-            <h1><span class="glitch">◆ СИСТЕМА ДОСЬЕ ◆</span></h1>
-            <nav class="header-nav" id="headerNav"></nav>
+            <h1>⬡ Система Досье</h1>
+            <button class="btn" onclick="showDashboard()"> Главная</button>
         </header>
 
-        <!-- Main Content -->
-        <main class="main-content" id="mainContent"></main>
+        <!-- Dashboard View -->
+        <div id="dashboard-view">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="font-size: 18px; text-transform: uppercase;">Досье в базе</h2>
+                <button class="btn btn-success" onclick="openNewDossierModal()">+ Новое досье</button>
+            </div>
+            <div id="dossier-grid" class="dossier-grid"></div>
+            <div id="empty-state" class="empty-state hidden">
+                <h2>Нет досье в базе</h2>
+                <p>Создайте первое досье, нажав на кнопку выше</p>
+            </div>
+        </div>
+
+        <!-- Dossier View -->
+        <div id="dossier-view" class="hidden">
+            <a href="#" class="nav-back" onclick="showDashboard(); return false;">← Назад к списку</a>
+            
+            <div class="dossier-view">
+                <!-- Left Column -->
+                <div>
+                    <div class="panel">
+                        <div class="avatar-container">
+                            <img id="dv-avatar" class="avatar-large" src="" alt="Аватар">
+                            <div class="file-input-wrapper">
+                                <button class="btn">📷 Загрузить фото</button>
+                                <input type="file" accept="image/*" onchange="uploadAvatar(event)">
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="field-label">Имя</div>
+                            <div class="field-value" id="dv-name" contenteditable="true" onblur="saveField('name', this.textContent)"></div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="field-label">Номер досье</div>
+                            <div class="field-value" id="dv-number" contenteditable="true" onblur="saveField('number', this.textContent)"></div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="field-label">Кодовое имя</div>
+                            <div class="field-value" id="dv-codename" contenteditable="true" onblur="saveField('codename', this.textContent)"></div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="field-label">Статус</div>
+                            <select class="form-select" id="dv-status" onchange="saveField('status', this.value)">
+                                <option value="alive">Жив</option>
+                                <option value="dead">Мёртв</option>
+                                <option value="missing">Пропал</option>
+                                <option value="unknown">Неизвестно</option>
+                            </select>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="field-label">Отношение</div>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="dv-relation-bar" style="width: 50%"></div>
+                                </div>
+                                <div class="progress-text"><span id="dv-relation-text">50</span>%</div>
+                            </div>
+                            <input type="range" id="dv-relation" min="0" max="100" value="50" oninput="updateRelationBar(this.value)" onchange="saveField('relation', this.value)">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column -->
+                <div>
+                    <div class="panel">
+                        <div class="panel-title">
+                            <span> Алгоритм / Деятельность</span>
+                        </div>
+                        <div class="field-value" id="dv-algorithm" contenteditable="true" onblur="saveField('algorithm', this.textContent)" style="min-height: 60px;"></div>
+                    </div>
+                    
+                    <div class="panel">
+                        <div class="panel-title">
+                            <span>️ Опасения</span>
+                            <button class="btn" style="padding: 5px 10px; font-size: 12px;" onclick="addConcern()">+ Добавить</button>
+                        </div>
+                        <div id="dv-concerns"></div>
+                    </div>
+                    
+                    <div class="panel">
+                        <div class="panel-title">
+                            <span>📝 Заметки</span>
+                        </div>
+                        <div class="field-value" id="dv-notes" contenteditable="true" onblur="saveField('notes', this.textContent)" style="min-height: 150px;"></div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-danger" onclick="deleteCurrentDossier()">️ Удалить досье</button>
+                    </div>
+                    
+                    <div class="timestamps">
+                        <div>Создано: <span id="dv-created"></span></div>
+                        <div>Обновлено: <span id="dv-updated"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Dossier Modal -->
+    <div id="new-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <h2 class="modal-title">Новое досье</h2>
+            <form id="new-form" onsubmit="createDossier(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Имя *</label>
+                        <input type="text" class="form-input" id="new-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Номер досье</label>
+                        <input type="text" class="form-input" id="new-number" placeholder="???">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Кодовое имя</label>
+                        <input type="text" class="form-input" id="new-codename">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Статус</label>
+                        <select class="form-select" id="new-status">
+                            <option value="alive">Жив</option>
+                            <option value="dead">Мёртв</option>
+                            <option value="missing">Пропал</option>
+                            <option value="unknown">Неизвестно</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">URL аватара (необязательно)</label>
+                    <input type="text" class="form-input" id="new-avatar" placeholder="https://...">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Алгоритм / Деятельность</label>
+                    <textarea class="form-textarea" id="new-algorithm"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Отношение</label>
+                    <input type="range" id="new-relation" min="0" max="100" value="50" style="width: 100%;">
+                    <div style="text-align: right; font-size: 12px; margin-top: 5px;"><span id="new-relation-text">50</span>%</div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn" onclick="closeNewModal()">Отмена</button>
+                    <button type="submit" class="btn btn-success">Создать</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
-        // ==================== DATA MANAGEMENT ====================
-        
+        // Storage helpers with error handling
+        function safeGetItem(key) {
+            try {
+                return localStorage.getItem(key);
+            } catch (e) {
+                console.warn('LocalStorage не доступен:', e);
+                return null;
+            }
+        }
+
+        function safeSetItem(key, value) {
+            try {
+                localStorage.setItem(key, value);
+                return true;
+            } catch (e) {
+                console.warn('Не удалось сохранить в LocalStorage:', e);
+                alert('Внимание: Данные не могут быть сохранены. Возможно, включён режим инкогнито или заблокированы куки.');
+                return false;
+            }
+        }
+
+        // Data management
         let dossiers = [];
-        let currentView = 'dashboard';
         let currentDossierId = null;
 
-        // Load data from localStorage
-        function loadData() {
-            const saved = localStorage.getItem('dossierData');
-            if (saved) {
-                dossiers = JSON.parse(saved);
+        function loadDossiers() {
+            const data = safeGetItem('dossiers');
+            if (data) {
+                dossiers = JSON.parse(data);
             } else {
-                // Default sample data
-                dossiers = [
-                    {
-                        id: 'DX-001',
-                        name: 'Мартин',
-                        avatar: null,
-                        codeName: 'нет',
-                        number: '???',
-                        relation: 50,
-                        status: 'alive',
-                        algorithm: 'очищение водосточной трубы',
-                        fears: ['Боится, что его сотрет Империя', 'Делится непроверенными данными'],
-                        notes: 'Объект проявляет признаки паранойи. Требует наблюдения.',
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    }
-                ];
-                saveData();
+                // Default example dossier
+                dossiers = [{
+                    id: Date.now().toString(),
+                    name: 'Мартин',
+                    number: '???',
+                    codename: 'нет',
+                    status: 'alive',
+                    relation: 50,
+                    avatar: '',
+                    algorithm: 'очищение водосточной трубы',
+                    concerns: [
+                        'Боится, что его сотрёт Империя',
+                        'Делится непроверенными данными'
+                    ],
+                    notes: '',
+                    created: new Date().toLocaleString('ru-RU'),
+                    updated: new Date().toLocaleString('ru-RU')
+                }];
+                saveDossiers();
             }
         }
 
-        // Save data to localStorage
-        function saveData() {
-            localStorage.setItem('dossierData', JSON.stringify(dossiers));
+        function saveDossiers() {
+            safeSetItem('dossiers', JSON.stringify(dossiers));
         }
 
-        // Generate unique ID
-        function generateId() {
-            const num = dossiers.length + 1;
-            return `DX-${String(num).padStart(3, '0')}`;
+        function getCurrentDossier() {
+            return dossiers.find(d => d.id === currentDossierId);
         }
 
-        // ==================== NAVIGATION ====================
+        function saveCurrentDossier() {
+            const dossier = getCurrentDossier();
+            if (dossier) {
+                dossier.updated = new Date().toLocaleString('ru-RU');
+                saveDossiers();
+            }
+        }
 
-        function navigate(view, id = null) {
-            currentView = view;
+        // View functions
+        function showDashboard() {
+            document.getElementById('dashboard-view').classList.remove('hidden');
+            document.getElementById('dossier-view').classList.add('hidden');
+            renderDashboard();
+        }
+
+        function showDossier(id) {
             currentDossierId = id;
-            render();
-            window.scrollTo(0, 0);
+            document.getElementById('dashboard-view').classList.add('hidden');
+            document.getElementById('dossier-view').classList.remove('hidden');
+            renderDossier();
         }
 
-        // ==================== RENDERING ====================
+        function renderDashboard() {
+            const grid = document.getElementById('dossier-grid');
+            const emptyState = document.getElementById('empty-state');
 
-        function render() {
-            renderHeader();
-            renderMainContent();
-        }
-
-        function renderHeader() {
-            const nav = document.getElementById('headerNav');
-            if (currentView === 'dashboard') {
-                nav.innerHTML = `
-                    <button class="btn btn-success" onclick="navigate('create')">+ Новое досье</button>
-                `;
-            } else {
-                nav.innerHTML = `
-                    <button class="btn" onclick="navigate('dashboard')">← Назад к списку</button>
-                `;
-            }
-        }
-
-        function renderMainContent() {
-            const main = document.getElementById('mainContent');
-            
-            if (currentView === 'dashboard') {
-                renderDashboard(main);
-            } else if (currentView === 'view') {
-                renderDossierView(main);
-            } else if (currentView === 'create' || currentView === 'edit') {
-                renderDossierForm(main);
-            }
-        }
-
-        // ==================== DASHBOARD ====================
-
-        function renderDashboard(container) {
             if (dossiers.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <h2>◆ БАЗА ДАННЫХ ПУСТА ◆</h2>
-                        <p>Нет активных досье в системе</p>
-                        <button class="btn btn-success" onclick="navigate('create')">+ Создать первое досье</button>
-                    </div>
-                `;
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
                 return;
             }
 
-            let html = '<div class="dashboard-grid">';
-            
-            dossiers.forEach(dossier => {
-                const statusClass = `status-${dossier.status}`;
-                const statusText = getStatusText(dossier.status);
-                const relationLabel = getRelationLabel(dossier.relation);
-                
-                html += `
-                    <div class="dossier-card" onclick="navigate('view', '${dossier.id}')">
-                        <div class="dossier-card-header">
-                            <span class="dossier-card-title">${dossier.name}</span>
-                            <span class="dossier-card-id">${dossier.id}</span>
-                        </div>
-                        <div class="dossier-card-avatar">
-                            ${dossier.avatar 
-                                ? `<img src="${dossier.avatar}" alt="${dossier.name}">`
-                                : '<div class="avatar-placeholder">?</div>'
-                            }
-                        </div>
-                        <div class="dossier-card-info">
-                            <p><strong>Код:</strong> ${dossier.codeName || '—'}</p>
-                            <p><strong>Отношение:</strong> ${relationLabel}</p>
-                            <p><span class="status-badge ${statusClass}">${statusText}</span></p>
-                        </div>
-                        <div class="dossier-card-actions">
-                            <button class="btn" onclick="event.stopPropagation(); navigate('view', '${dossier.id}')">Открыть</button>
-                            <button class="btn btn-danger" onclick="event.stopPropagation(); deleteDossier('${dossier.id}')">Удалить</button>
-                        </div>
+            grid.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
+            grid.innerHTML = dossiers.map(d => `
+                <div class="dossier-card" onclick="showDossier('${d.id}')">
+                    <img class="avatar" src="${d.avatar || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23001828%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22 font-size=%2240%22>?</text></svg>'}" alt="${d.name}">
+                    <h3>${d.name}</h3>
+                    <div class="info">
+                        <div>Номер: ${d.number || '???'}</div>
+                        <div>Кодовое имя: ${d.codename || 'нет'}</div>
+                        <div>Отношение: ${d.relation}%</div>
                     </div>
-                `;
-            });
-            
-            html += '</div>';
-            container.innerHTML = html;
+                    <span class="status-badge status-${d.status}">${getStatusText(d.status)}</span>
+                </div>
+            `).join('');
         }
 
-        // ==================== DOSSIER VIEW ====================
+        function renderDossier() {
+            const d = getCurrentDossier();
+            if (!d) return;
 
-        function renderDossierView(container) {
-            const dossier = dossiers.find(d => d.id === currentDossierId);
-            
-            if (!dossier) {
-                container.innerHTML = '<div class="empty-state"><h2>ДОСЬЕ НЕ НАЙДЕНО</h2></div>';
+            document.getElementById('dv-avatar').src = d.avatar || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 250 250%22><rect fill=%22%23001828%22 width=%22250%22 height=%22250%22/><text x=%22125%22 y=%22135%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22 font-size=%22100%22>?</text></svg>';
+            document.getElementById('dv-name').textContent = d.name;
+            document.getElementById('dv-number').textContent = d.number || '???';
+            document.getElementById('dv-codename').textContent = d.codename || 'нет';
+            document.getElementById('dv-status').value = d.status;
+            document.getElementById('dv-relation').value = d.relation;
+            document.getElementById('dv-algorithm').textContent = d.algorithm || '';
+            document.getElementById('dv-notes').textContent = d.notes || '';
+            document.getElementById('dv-created').textContent = d.created;
+            document.getElementById('dv-updated').textContent = d.updated;
+
+            updateRelationBar(d.relation);
+            renderConcerns();
+        }
+
+        function renderConcerns() {
+            const d = getCurrentDossier();
+            if (!d) return;
+
+            const container = document.getElementById('dv-concerns');
+            if (!d.concerns || d.concerns.length === 0) {
+                container.innerHTML = '<div style="opacity: 0.5; font-style: italic;">Нет опасений</div>';
                 return;
             }
 
-            const statusClass = `status-${dossier.status}`;
-            const statusText = getStatusText(dossier.status);
-
-            container.innerHTML = `
-                <div class="nav-breadcrumb">
-                    <a href="#" onclick="navigate('dashboard'); return false;">Главная</a>
-                    <span>◆</span>
-                    <span>${dossier.id}</span>
+            container.innerHTML = d.concerns.map((c, i) => `
+                <div class="list-item">
+                    <span class="list-item-text">${c}</span>
+                    <button class="list-item-delete" onclick="deleteConcern(${i})">✕</button>
                 </div>
-
-                <div class="dossier-grid">
-                    <!-- Left Panel - Avatar & Basic Info -->
-                    <div class="panel">
-                        <div class="panel-header">◆ ${dossier.name}</div>
-                        
-                        <div class="avatar-container">
-                            <div class="avatar-frame">
-                                ${dossier.avatar 
-                                    ? `<img src="${dossier.avatar}" alt="${dossier.name}">`
-                                    : '<div class="avatar-placeholder">?</div>'
-                                }
-                            </div>
-                            <div class="file-input-wrapper">
-                                <button class="btn">Загрузить фото</button>
-                                <input type="file" accept="image/*" onchange="uploadAvatar(this, '${dossier.id}')">
-                            </div>
-                        </div>
-
-                        <div class="info-row">
-                            <div class="info-label">Номер</div>
-                            <div class="info-value" onclick="editField('${dossier.id}', 'number')">${dossier.number || '—'}</div>
-                        </div>
-
-                        <div class="info-row">
-                            <div class="info-label">Кодовое имя</div>
-                            <div class="info-value" onclick="editField('${dossier.id}', 'codeName')">${dossier.codeName || '—'}</div>
-                        </div>
-
-                        <div class="info-row">
-                            <div class="info-label">Отношение</div>
-                            <div class="progress-container">
-                                <div class="progress-bar" style="width: ${dossier.relation}%"></div>
-                                <span class="progress-text">${dossier.relation}%</span>
-                            </div>
-                            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="editRelation('${dossier.id}')">Изменить</button>
-                        </div>
-
-                        <div class="info-row">
-                            <div class="info-label">Статус</div>
-                            <div class="info-value">
-                                <span class="status-badge ${statusClass}">${statusText}</span>
-                            </div>
-                            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="editStatus('${dossier.id}')">Изменить</button>
-                        </div>
-                    </div>
-
-                    <!-- Right Panel - Algorithm -->
-                    <div class="panel">
-                        <div class="panel-header">Алгоритм: <span onclick="editField('${dossier.id}', 'algorithm')" class="info-value editable" style="display: inline; padding: 5px 10px;">${dossier.algorithm || 'не указан'}</span></div>
-                        <div style="color: var(--text-dim); font-size: 0.9rem; margin-top: 20px;">
-                            <p>Последнее обновление: ${formatDate(dossier.updatedAt)}</p>
-                            <p>Создано: ${formatDate(dossier.createdAt)}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dossier-bottom">
-                    <!-- Fears Panel -->
-                    <div class="panel">
-                        <div class="panel-header">◆ Опасения / Заметки</div>
-                        <ul class="bullet-list" id="fearsList">
-                            ${dossier.fears.map((fear, index) => `
-                                <li>
-                                    ${fear}
-                                    <button class="remove-item-btn" onclick="removeFear('${dossier.id}', ${index})">×</button>
-                                </li>
-                            `).join('')}
-                        </ul>
-                        <button class="add-item-btn" onclick="addFear('${dossier.id}')">+ Добавить опасение</button>
-                    </div>
-
-                    <!-- Notes Panel -->
-                    <div class="panel">
-                        <div class="panel-header">◆ Дополнительные заметки</div>
-                        <div class="info-value" onclick="editField('${dossier.id}', 'notes')" style="min-height: 150px; cursor: pointer;">
-                            ${dossier.notes || 'Нет заметок...'}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="action-bar">
-                    <button class="btn btn-success" onclick="navigate('edit', '${dossier.id}')"> Редактировать всё</button>
-                    <button class="btn btn-danger" onclick="deleteDossier('${dossier.id}')">🗑 Удалить досье</button>
-                </div>
-            `;
+            `).join('');
         }
 
-        // ==================== DOSSIER FORM ====================
-
-        function renderDossierForm(container) {
-            const isEdit = currentView === 'edit';
-            const dossier = isEdit ? dossiers.find(d => d.id === currentDossierId) : null;
-
-            container.innerHTML = `
-                <div class="nav-breadcrumb">
-                    <a href="#" onclick="navigate('dashboard'); return false;">Главная</a>
-                    <span>◆</span>
-                    <span>${isEdit ? 'Редактирование' : 'Новое досье'}</span>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-header">${isEdit ? '✎ Редактирование досье' : '+ Новое досье'}</div>
-                    
-                    <form id="dossierForm" onsubmit="saveDossier(event)">
-                        <input type="hidden" name="id" value="${dossier ? dossier.id : ''}">
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Имя / Позывной</label>
-                                <input type="text" name="name" value="${dossier ? dossier.name : ''}" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Номер досье</label>
-                                <input type="text" name="number" value="${dossier ? dossier.number : ''}" placeholder="???">
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Кодовое имя</label>
-                                <input type="text" name="codeName" value="${dossier ? dossier.codeName : ''}" placeholder="нет">
-                            </div>
-                            <div class="form-group">
-                                <label>Статус</label>
-                                <select name="status">
-                                    <option value="alive" ${dossier && dossier.status === 'alive' ? 'selected' : ''}>ЖИВ</option>
-                                    <option value="dead" ${dossier && dossier.status === 'dead' ? 'selected' : ''}>МЁРТВ</option>
-                                    <option value="missing" ${dossier && dossier.status === 'missing' ? 'selected' : ''}>ПРОПАЛ</option>
-                                    <option value="unknown" ${dossier && dossier.status === 'unknown' ? 'selected' : ''}>НЕИЗВЕСТНО</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Алгоритм / Деятельность</label>
-                            <input type="text" name="algorithm" value="${dossier ? dossier.algorithm : ''}" placeholder="очищение водосточной трубы">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Отношение (%)</label>
-                            <input type="range" name="relation" min="0" max="100" value="${dossier ? dossier.relation : 50}" oninput="this.nextElementSibling.value = this.value + '%'">
-                            <output style="color: var(--primary); margin-left: 10px;">${dossier ? dossier.relation : 50}%</output>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Фотография</label>
-                            <input type="file" accept="image/*" id="avatarInput" onchange="previewAvatar(this)">
-                            <input type="hidden" name="avatar" value="${dossier ? dossier.avatar : ''}">
-                            <div id="avatarPreview" style="margin-top: 10px;">
-                                ${dossier && dossier.avatar 
-                                    ? `<img src="${dossier.avatar}" style="max-width: 200px; border: 1px solid var(--primary);">`
-                                    : ''
-                                }
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Опасения (каждое с новой строки)</label>
-                            <textarea name="fears" placeholder="Боится, что его сотрет Империя&#10;Делится непроверенными данными">${dossier ? dossier.fears.join('\n') : ''}</textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Дополнительные заметки</label>
-                            <textarea name="notes" placeholder="Введите заметки...">${dossier ? dossier.notes : ''}</textarea>
-                        </div>
-
-                        <div class="action-bar">
-                            <button type="submit" class="btn btn-success">💾 Сохранить</button>
-                            <button type="button" class="btn" onclick="navigate('dashboard')">Отмена</button>
-                        </div>
-                    </form>
-                </div>
-            `;
-        }
-
-        // ==================== DATA OPERATIONS ====================
-
-        function saveDossier(event) {
-            event.preventDefault();
-            const form = event.target;
-            const formData = new FormData(form);
-
-            const data = {
-                id: formData.get('id') || generateId(),
-                name: formData.get('name'),
-                number: formData.get('number'),
-                codeName: formData.get('codeName'),
-                status: formData.get('status'),
-                algorithm: formData.get('algorithm'),
-                relation: parseInt(formData.get('relation')),
-                avatar: formData.get('avatar'),
-                fears: formData.get('fears').split('\n').filter(f => f.trim()),
-                notes: formData.get('notes'),
-                createdAt: currentView === 'edit' 
-                    ? dossiers.find(d => d.id === currentDossierId).createdAt 
-                    : new Date().toISOString(),
-                updatedAt: new Date().toISOString()
+        function getStatusText(status) {
+            const statuses = {
+                alive: 'Жив',
+                dead: 'Мёртв',
+                missing: 'Пропал',
+                unknown: 'Неизвестно'
             };
-
-            if (currentView === 'edit') {
-                const index = dossiers.findIndex(d => d.id === currentDossierId);
-                dossiers[index] = data;
-            } else {
-                dossiers.push(data);
-            }
-
-            saveData();
-            navigate('view', data.id);
+            return statuses[status] || status;
         }
 
-        function deleteDossier(id) {
-            if (confirm('Вы уверены, что хотите удалить это досье?')) {
-                dossiers = dossiers.filter(d => d.id !== id);
-                saveData();
-                navigate('dashboard');
+        // Edit functions
+        function saveField(field, value) {
+            const d = getCurrentDossier();
+            if (d) {
+                d[field] = value;
+                saveCurrentDossier();
+                renderDashboard();
             }
         }
 
-        // ==================== AVATAR UPLOAD ====================
-
-        function uploadAvatar(input, dossierId) {
-            const file = input.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const dossier = dossiers.find(d => d.id === dossierId);
-                dossier.avatar = e.target.result;
-                dossier.updatedAt = new Date().toISOString();
-                saveData();
-                render();
-            };
-            reader.readAsDataURL(file);
+        function updateRelationBar(value) {
+            document.getElementById('dv-relation-bar').style.width = value + '%';
+            document.getElementById('dv-relation-text').textContent = value;
         }
 
-        function previewAvatar(input) {
-            const file = input.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('avatarPreview').innerHTML = 
-                    `<img src="${e.target.result}" style="max-width: 200px; border: 1px solid var(--primary);">`;
-                document.querySelector('input[name="avatar"]').value = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // ==================== INLINE EDITING ====================
-
-        function editField(dossierId, field) {
-            const dossier = dossiers.find(d => d.id === dossierId);
-            const newValue = prompt(`Введите новое значение для "${field}":`, dossier[field] || '');
-            
-            if (newValue !== null) {
-                dossier[field] = newValue;
-                dossier.updatedAt = new Date().toISOString();
-                saveData();
-                render();
-            }
-        }
-
-        function editRelation(dossierId) {
-            const dossier = dossiers.find(d => d.id === dossierId);
-            const newValue = prompt(`Введите отношение (0-100):`, dossier.relation);
-            
-            if (newValue !== null) {
-                const num = parseInt(newValue);
-                if (!isNaN(num) && num >= 0 && num <= 100) {
-                    dossier.relation = num;
-                    dossier.updatedAt = new Date().toISOString();
-                    saveData();
-                    render();
-                } else {
-                    alert('Введите число от 0 до 100');
+        function addConcern() {
+            const text = prompt('Введите опасение:');
+            if (text && text.trim()) {
+                const d = getCurrentDossier();
+                if (d) {
+                    if (!d.concerns) d.concerns = [];
+                    d.concerns.push(text.trim());
+                    saveCurrentDossier();
+                    renderConcerns();
                 }
             }
         }
 
-        function editStatus(dossierId) {
-            const dossier = dossiers.find(d => d.id === dossierId);
-            const statuses = {
-                'alive': 'ЖИВ',
-                'dead': 'МЁРТВ',
-                'missing': 'ПРОПАЛ',
-                'unknown': 'НЕИЗВЕСТНО'
+        function deleteConcern(index) {
+            const d = getCurrentDossier();
+            if (d && d.concerns) {
+                d.concerns.splice(index, 1);
+                saveCurrentDossier();
+                renderConcerns();
+            }
+        }
+
+        function uploadAvatar(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const d = getCurrentDossier();
+                if (d) {
+                    d.avatar = e.target.result;
+                    saveCurrentDossier();
+                    document.getElementById('dv-avatar').src = d.avatar;
+                    renderDashboard();
+                }
             };
-            
-            let statusText = 'Выберите статус:\n';
-            Object.entries(statuses).forEach(([key, value]) => {
-                statusText += `\n${key.toUpperCase()} - ${value}`;
-            });
-            statusText += `\n\nВведите статус (alive/dead/missing/unknown):`;
-            
-            const newValue = prompt(statusText, dossier.status);
-            
-            if (newValue !== null && statuses[newValue.toLowerCase()]) {
-                dossier.status = newValue.toLowerCase();
-                dossier.updatedAt = new Date().toISOString();
-                saveData();
-                render();
-            } else if (newValue !== null) {
-                alert('Неверный статус. Используйте: alive, dead, missing, unknown');
+            reader.readAsDataURL(file);
+        }
+
+        function deleteCurrentDossier() {
+            if (confirm('Вы уверены, что хотите удалить это досье? Это действие нельзя отменить.')) {
+                dossiers = dossiers.filter(d => d.id !== currentDossierId);
+                saveDossiers();
+                showDashboard();
             }
         }
 
-        // ==================== FEARS MANAGEMENT ====================
-
-        function addFear(dossierId) {
-            const fear = prompt('Введите опасение:');
-            if (fear && fear.trim()) {
-                const dossier = dossiers.find(d => d.id === dossierId);
-                dossier.fears.push(fear.trim());
-                dossier.updatedAt = new Date().toISOString();
-                saveData();
-                render();
-            }
+        // Modal functions
+        function openNewDossierModal() {
+            document.getElementById('new-modal').classList.remove('hidden');
+            document.getElementById('new-form').reset();
+            document.getElementById('new-relation-text').textContent = '50';
         }
 
-        function removeFear(dossierId, index) {
-            if (confirm('Удалить эту запись?')) {
-                const dossier = dossiers.find(d => d.id === dossierId);
-                dossier.fears.splice(index, 1);
-                dossier.updatedAt = new Date().toISOString();
-                saveData();
-                render();
-            }
+        function closeNewModal() {
+            document.getElementById('new-modal').classList.add('hidden');
         }
 
-        // ==================== HELPERS ====================
+        function createDossier(event) {
+            event.preventDefault();
 
-        function getStatusText(status) {
-            const statuses = {
-                'alive': 'ЖИВ',
-                'dead': 'МЁРТВ',
-                'missing': 'ПРОПАЛ',
-                'unknown': 'НЕИЗВЕСТНО'
+            const newDossier = {
+                id: Date.now().toString(),
+                name: document.getElementById('new-name').value,
+                number: document.getElementById('new-number').value || '???',
+                codename: document.getElementById('new-codename').value || 'нет',
+                status: document.getElementById('new-status').value,
+                relation: parseInt(document.getElementById('new-relation').value),
+                avatar: document.getElementById('new-avatar').value || '',
+                algorithm: document.getElementById('new-algorithm').value || '',
+                concerns: [],
+                notes: '',
+                created: new Date().toLocaleString('ru-RU'),
+                updated: new Date().toLocaleString('ru-RU')
             };
-            return statuses[status] || 'НЕИЗВЕСТНО';
+
+            dossiers.push(newDossier);
+            saveDossiers();
+            closeNewModal();
+            showDossier(newDossier.id);
         }
 
-        function getRelationLabel(relation) {
-            if (relation >= 80) return 'ДРУЖЕЛЮБНО';
-            if (relation >= 60) return 'ПОЛОЖИТЕЛЬНО';
-            if (relation >= 40) return 'НЕЙТРАЛЬНО';
-            if (relation >= 20) return 'НЕГАТИВНО';
-            return 'ВРАЖДЕБНО';
-        }
+        // Range slider text update
+        document.getElementById('new-relation')?.addEventListener('input', function() {
+            document.getElementById('new-relation-text').textContent = this.value;
+        });
 
-        function formatDate(isoString) {
-            const date = new Date(isoString);
-            return date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'});
-        }
-
-        // ==================== INITIALIZATION ====================
-
-        loadData();
-        render();
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDossiers();
+            renderDashboard();
+        });
     </script>
 </body>
 </html>
