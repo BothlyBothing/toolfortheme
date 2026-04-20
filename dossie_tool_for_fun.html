@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -11,23 +10,10 @@
             box-sizing: border-box;
         }
 
-        @font-face {
-            font-family: 'CyberFont';
-            src: local('Courier New'), local('Consolas'), monospace;
-        }
-
-        :root {
-            --neon-blue: #00f0ff;
-            --neon-green: #00ff41;
-            --dark-bg: #0a0f14;
-            --panel-bg: rgba(0, 30, 40, 0.85);
-            --border-color: #00f0ff;
-        }
-
         body {
-            font-family: 'Courier New', 'Consolas', monospace;
-            background: var(--dark-bg);
-            color: var(--neon-blue);
+            font-family: 'Courier New', monospace;
+            background: #0a1a1a;
+            color: #00ffff;
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
@@ -60,14 +46,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(
-                ellipse at center,
-                transparent 0%,
-                rgba(0, 0, 0, 0.3) 100%
-            );
+            background: rgba(0, 255, 255, 0.03);
+            animation: flicker 0.15s infinite;
             pointer-events: none;
             z-index: 999;
-            animation: flicker 0.15s infinite;
         }
 
         @keyframes flicker {
@@ -90,82 +72,67 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
+            border: 2px solid #00ffff;
             margin-bottom: 30px;
-            background: var(--panel-bg);
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+            background: rgba(0, 255, 255, 0.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
         }
 
         .header h1 {
             font-size: 24px;
             text-transform: uppercase;
             letter-spacing: 3px;
-            text-shadow: 0 0 10px var(--neon-blue);
-            animation: glitch 3s infinite;
-        }
-
-        @keyframes glitch {
-            0%, 100% { text-shadow: 0 0 10px var(--neon-blue); }
-            92% { text-shadow: 0 0 10px var(--neon-blue); }
-            93% { text-shadow: 2px 0 10px #ff0000, -2px 0 10px #0000ff; }
-            94% { text-shadow: 0 0 10px var(--neon-blue); }
+            text-shadow: 0 0 10px #00ffff;
         }
 
         .btn {
-            background: transparent;
-            border: 2px solid var(--border-color);
-            color: var(--neon-blue);
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #00ffff;
+            color: #00ffff;
             padding: 10px 20px;
-            font-family: inherit;
-            font-size: 14px;
             cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
             text-transform: uppercase;
-            letter-spacing: 2px;
             transition: all 0.3s;
-            border-radius: 5px;
         }
 
         .btn:hover {
-            background: var(--border-color);
-            color: var(--dark-bg);
-            box-shadow: 0 0 20px var(--neon-blue);
+            background: rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
         }
 
         .btn-danger {
-            border-color: #ff4444;
-            color: #ff4444;
+            border-color: #ff0055;
+            color: #ff0055;
         }
 
         .btn-danger:hover {
-            background: #ff4444;
-            color: white;
-            box-shadow: 0 0 20px #ff4444;
+            background: rgba(255, 0, 85, 0.3);
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.5);
         }
 
         .btn-success {
-            border-color: var(--neon-green);
-            color: var(--neon-green);
+            border-color: #00ff55;
+            color: #00ff55;
         }
 
         .btn-success:hover {
-            background: var(--neon-green);
-            color: var(--dark-bg);
-            box-shadow: 0 0 20px var(--neon-green);
+            background: rgba(0, 255, 85, 0.3);
+            box-shadow: 0 0 15px rgba(0, 255, 85, 0.5);
         }
 
         /* Dossier Grid */
         .dossier-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
         }
 
         .dossier-card {
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
+            border: 2px solid #00ffff;
             padding: 20px;
-            background: var(--panel-bg);
+            background: rgba(0, 255, 255, 0.05);
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
@@ -179,22 +146,19 @@
             left: 0;
             width: 100%;
             height: 3px;
-            background: linear-gradient(90deg, var(--neon-blue), var(--neon-green));
+            background: #00ffff;
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .dossier-card:hover::before {
+            transform: scaleX(1);
         }
 
         .dossier-card:hover {
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.3);
-        }
-
-        .dossier-card .avatar {
-            width: 100px;
-            height: 100px;
-            border: 2px solid var(--border-color);
-            border-radius: 5px;
-            object-fit: cover;
-            margin-bottom: 15px;
-            background: rgba(0, 240, 255, 0.1);
         }
 
         .dossier-card h3 {
@@ -203,43 +167,39 @@
             text-transform: uppercase;
         }
 
-        .dossier-card .info {
+        .dossier-card p {
             font-size: 12px;
-            line-height: 1.8;
+            margin: 5px 0;
             opacity: 0.8;
         }
 
         .status-badge {
             display: inline-block;
             padding: 3px 8px;
-            border-radius: 3px;
+            border: 1px solid;
             font-size: 11px;
             text-transform: uppercase;
             margin-top: 10px;
         }
 
         .status-alive {
-            background: rgba(0, 255, 65, 0.2);
-            border: 1px solid var(--neon-green);
-            color: var(--neon-green);
+            border-color: #00ff55;
+            color: #00ff55;
         }
 
         .status-dead {
-            background: rgba(255, 68, 68, 0.2);
-            border: 1px solid #ff4444;
-            color: #ff4444;
+            border-color: #ff0055;
+            color: #ff0055;
         }
 
         .status-missing {
-            background: rgba(255, 165, 0, 0.2);
-            border: 1px solid orange;
-            color: orange;
+            border-color: #ffaa00;
+            color: #ffaa00;
         }
 
         .status-unknown {
-            background: rgba(128, 128, 128, 0.2);
-            border: 1px solid gray;
-            color: gray;
+            border-color: #888;
+            color: #888;
         }
 
         /* Dossier View */
@@ -256,22 +216,21 @@
         }
 
         .panel {
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
+            border: 2px solid #00ffff;
             padding: 20px;
-            background: var(--panel-bg);
-            margin-bottom: 20px;
+            background: rgba(0, 255, 255, 0.05);
+            position: relative;
         }
 
         .panel-title {
-            font-size: 16px;
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #0a1a1a;
+            padding: 0 10px;
+            font-size: 14px;
             text-transform: uppercase;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            color: #00ffff;
         }
 
         .avatar-container {
@@ -279,178 +238,157 @@
             margin-bottom: 20px;
         }
 
-        .avatar-large {
-            width: 250px;
-            height: 250px;
-            border: 3px solid var(--border-color);
-            border-radius: 10px;
+        .avatar {
+            width: 200px;
+            height: 200px;
+            border: 3px solid #00ffff;
             object-fit: cover;
-            background: rgba(0, 240, 255, 0.1);
-            margin-bottom: 15px;
+            image-rendering: pixelated;
+            background: #000;
         }
 
-        .field {
-            margin-bottom: 15px;
-        }
-
-        .field-label {
-            font-size: 12px;
-            opacity: 0.7;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .field-value {
-            font-size: 16px;
-            padding: 8px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            background: rgba(0, 240, 255, 0.05);
-            min-height: 40px;
+        .avatar-placeholder {
+            width: 200px;
+            height: 200px;
+            border: 3px solid #00ffff;
             display: flex;
             align-items: center;
+            justify-content: center;
+            background: rgba(0, 255, 255, 0.1);
+            font-size: 60px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .info-label {
+            color: #00ffff;
+            font-size: 14px;
+        }
+
+        .info-value {
+            color: #fff;
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.3s;
+            padding: 2px 5px;
         }
 
-        .field-value:hover {
-            background: rgba(0, 240, 255, 0.1);
-            border-color: var(--neon-green);
+        .info-value:hover {
+            background: rgba(0, 255, 255, 0.2);
         }
 
-        .field-value[contenteditable="true"]:focus {
+        .info-value[contenteditable="true"] {
+            border: 1px dashed #00ffff;
             outline: none;
-            border-color: var(--neon-green);
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
         }
 
         /* Progress Bar */
         .progress-container {
-            margin: 10px 0;
+            margin: 15px 0;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            margin-bottom: 5px;
         }
 
         .progress-bar {
             height: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-color);
-            border-radius: 3px;
+            border: 2px solid #00ffff;
+            position: relative;
             overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--neon-blue), var(--neon-green));
-            transition: width 0.5s ease;
-            box-shadow: 0 0 10px var(--neon-blue);
+            background: linear-gradient(90deg, #00ffff, #00ff55);
+            transition: width 0.5s;
         }
 
-        .progress-text {
-            font-size: 12px;
-            margin-top: 5px;
-            text-align: right;
+        /* Notes Section */
+        .notes-section {
+            margin-top: 20px;
         }
 
-        /* List Items */
-        .list-item {
+        .notes-list {
+            list-style: none;
+        }
+
+        .notes-list li {
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 3px solid #00ffff;
+            background: rgba(0, 255, 255, 0.05);
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            padding: 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            margin-bottom: 8px;
-            background: rgba(0, 240, 255, 0.05);
         }
 
-        .list-item-text {
-            flex: 1;
-            font-size: 14px;
-        }
-
-        .list-item-delete {
-            background: transparent;
-            border: 1px solid #ff4444;
-            color: #ff4444;
-            padding: 3px 8px;
+        .notes-list li button {
+            background: none;
+            border: none;
+            color: #ff0055;
             cursor: pointer;
-            font-size: 12px;
-            border-radius: 3px;
-            margin-left: 10px;
+            font-size: 16px;
         }
 
-        .list-item-delete:hover {
-            background: #ff4444;
-            color: white;
-        }
-
-        .add-item-form {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .add-item-input {
-            flex: 1;
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid var(--border-color);
-            color: var(--neon-blue);
-            padding: 8px 12px;
-            font-family: inherit;
-            font-size: 14px;
-            border-radius: 5px;
-        }
-
-        .add-item-input::placeholder {
-            color: rgba(0, 240, 255, 0.5);
-        }
-
-        /* Form Styles */
+        /* Form */
         .form-group {
             margin-bottom: 20px;
         }
 
-        .form-label {
-            font-size: 12px;
-            text-transform: uppercase;
-            opacity: 0.7;
-            margin-bottom: 8px;
+        .form-group label {
             display: block;
-        }
-
-        .form-input, .form-select, .form-textarea {
-            width: 100%;
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px solid var(--border-color);
-            color: var(--neon-blue);
-            padding: 12px;
-            font-family: inherit;
+            margin-bottom: 8px;
             font-size: 14px;
-            border-radius: 5px;
+            text-transform: uppercase;
         }
 
-        .form-textarea {
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 255, 255, 0.05);
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .form-group textarea {
             min-height: 100px;
             resize: vertical;
         }
 
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--neon-green);
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        /* Navigation */
+        .nav-back {
+            margin-bottom: 20px;
         }
 
-        @media (max-width: 600px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
+        /* Hidden */
+        .hidden {
+            display: none !important;
         }
 
-        /* File Input */
+        /* File input styling */
         .file-input-wrapper {
             position: relative;
             overflow: hidden;
@@ -467,23 +405,8 @@
             height: 100%;
         }
 
-        /* Navigation */
-        .nav-back {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            color: var(--neon-blue);
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .nav-back:hover {
-            color: var(--neon-green);
-        }
-
         /* Modal */
-        .modal-overlay {
+        .modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -491,76 +414,101 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.8);
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             z-index: 2000;
         }
 
-        .modal {
-            background: var(--dark-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
+        .modal-content {
+            background: #0a1a1a;
+            border: 2px solid #00ffff;
             padding: 30px;
-            max-width: 600px;
+            max-width: 500px;
             width: 90%;
-            max-height: 90vh;
+            max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 0 50px rgba(0, 240, 255, 0.3);
         }
 
-        .modal-title {
-            font-size: 20px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .modal-actions {
+        .modal-header {
             display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        /* Hidden */
-        .hidden {
-            display: none !important;
+        .modal-close {
+            background: none;
+            border: none;
+            color: #00ffff;
+            font-size: 24px;
+            cursor: pointer;
         }
 
-        /* Range Input */
-        input[type=range] {
-            width: 100%;
+        /* Range slider */
+        input[type="range"] {
             -webkit-appearance: none;
-            background: transparent;
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 255, 255, 0.2);
+            border: none;
+            outline: none;
         }
 
-        input[type=range]::-webkit-slider-thumb {
+        input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             width: 20px;
             height: 20px;
-            background: var(--neon-blue);
+            background: #00ffff;
             cursor: pointer;
-            border-radius: 50%;
-            margin-top: -8px;
-            box-shadow: 0 0 10px var(--neon-blue);
+            border: 2px solid #0a1a1a;
         }
 
-        input[type=range]::-webkit-slider-runnable-track {
+        /* Glitch effect for title */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 4px;
-            background: var(--border-color);
-            border-radius: 2px;
+            height: 100%;
         }
 
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 20px;
+        .glitch::before {
+            animation: glitch-1 0.3s infinite linear alternate-reverse;
+            color: #ff0055;
+            z-index: -1;
         }
 
-        /* Empty State */
+        .glitch::after {
+            animation: glitch-2 0.3s infinite linear alternate-reverse;
+            color: #00ff55;
+            z-index: -2;
+        }
+
+        @keyframes glitch-1 {
+            0% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 1px); }
+            20% { clip-path: inset(80% 0 10% 0); transform: translate(2px, -1px); }
+            40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
+            60% { clip-path: inset(20% 0 70% 0); transform: translate(2px, -2px); }
+            80% { clip-path: inset(60% 0 30% 0); transform: translate(-1px, 1px); }
+            100% { clip-path: inset(30% 0 60% 0); transform: translate(1px, -1px); }
+        }
+
+        @keyframes glitch-2 {
+            0% { clip-path: inset(70% 0 20% 0); transform: translate(2px, -1px); }
+            20% { clip-path: inset(20% 0 70% 0); transform: translate(-2px, 1px); }
+            40% { clip-path: inset(50% 0 40% 0); transform: translate(2px, 2px); }
+            60% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, -2px); }
+            80% { clip-path: inset(40% 0 50% 0); transform: translate(1px, 1px); }
+            100% { clip-path: inset(80% 0 10% 0); transform: translate(-1px, -1px); }
+        }
+
+        /* Empty state */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -570,459 +518,419 @@
         .empty-state h2 {
             margin-bottom: 10px;
         }
-
-        /* Timestamps */
-        .timestamps {
-            font-size: 11px;
-            opacity: 0.5;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        /* Select dropdown styling */
-        .form-select {
-            cursor: pointer;
-        }
-
-        .form-select option {
-            background: var(--dark-bg);
-            color: var(--neon-blue);
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Header -->
-        <header class="header">
-            <h1>⬡ Система Досье</h1>
-            <button class="btn" onclick="showDashboard()"> Главная</button>
-        </header>
-
-        <!-- Dashboard View -->
-        <div id="dashboard-view">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="font-size: 18px; text-transform: uppercase;">Досье в базе</h2>
-                <button class="btn btn-success" onclick="openNewDossierModal()">+ Новое досье</button>
-            </div>
-            <div id="dossier-grid" class="dossier-grid"></div>
-            <div id="empty-state" class="empty-state hidden">
-                <h2>Нет досье в базе</h2>
-                <p>Создайте первое досье, нажав на кнопку выше</p>
-            </div>
+        <div class="header">
+            <h1 class="glitch" data-text="СИСТЕМА ДОСЬЕ">СИСТЕМА ДОСЬЕ</h1>
+            <button class="btn btn-success" onclick="showNewDossierForm()">+ Новое досье</button>
         </div>
 
-        <!-- Dossier View -->
-        <div id="dossier-view" class="hidden">
-            <a href="#" class="nav-back" onclick="showDashboard(); return false;">← Назад к списку</a>
-            
-            <div class="dossier-view">
-                <!-- Left Column -->
-                <div>
-                    <div class="panel">
-                        <div class="avatar-container">
-                            <img id="dv-avatar" class="avatar-large" src="" alt="Аватар">
-                            <div class="file-input-wrapper">
-                                <button class="btn">📷 Загрузить фото</button>
-                                <input type="file" accept="image/*" onchange="uploadAvatar(event)">
-                            </div>
-                        </div>
-                        
-                        <div class="field">
-                            <div class="field-label">Имя</div>
-                            <div class="field-value" id="dv-name" contenteditable="true" onblur="saveField('name', this.textContent)"></div>
-                        </div>
-                        
-                        <div class="field">
-                            <div class="field-label">Номер досье</div>
-                            <div class="field-value" id="dv-number" contenteditable="true" onblur="saveField('number', this.textContent)"></div>
-                        </div>
-                        
-                        <div class="field">
-                            <div class="field-label">Кодовое имя</div>
-                            <div class="field-value" id="dv-codename" contenteditable="true" onblur="saveField('codename', this.textContent)"></div>
-                        </div>
-                        
-                        <div class="field">
-                            <div class="field-label">Статус</div>
-                            <select class="form-select" id="dv-status" onchange="saveField('status', this.value)">
-                                <option value="alive">Жив</option>
-                                <option value="dead">Мёртв</option>
-                                <option value="missing">Пропал</option>
-                                <option value="unknown">Неизвестно</option>
-                            </select>
-                        </div>
-                        
-                        <div class="field">
-                            <div class="field-label">Отношение</div>
-                            <div class="progress-container">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" id="dv-relation-bar" style="width: 50%"></div>
-                                </div>
-                                <div class="progress-text"><span id="dv-relation-text">50</span>%</div>
-                            </div>
-                            <input type="range" id="dv-relation" min="0" max="100" value="50" oninput="updateRelationBar(this.value)" onchange="saveField('relation', this.value)">
-                        </div>
-                    </div>
+        <!-- Main Content -->
+        <div id="main-content">
+            <!-- Dossier Grid (Home) -->
+            <div id="dossier-grid" class="dossier-grid"></div>
+
+            <!-- Single Dossier View -->
+            <div id="dossier-view" class="hidden">
+                <div class="nav-back">
+                    <button class="btn" onclick="showHome()">← Назад к списку</button>
                 </div>
-                
-                <!-- Right Column -->
-                <div>
+                <div class="dossier-view">
+                    <!-- Left Panel -->
                     <div class="panel">
-                        <div class="panel-title">
-                            <span> Алгоритм / Деятельность</span>
+                        <span class="panel-title">Профиль</span>
+                        <div class="avatar-container">
+                            <img id="view-avatar" class="avatar hidden" alt="Avatar">
+                            <div id="view-avatar-placeholder" class="avatar-placeholder">👤</div>
+                            <div style="margin-top: 15px;">
+                                <div class="file-input-wrapper">
+                                    <button class="btn">📷 Загрузить фото</button>
+                                    <input type="file" id="avatar-upload" accept="image/*" onchange="handleAvatarUpload(event)">
+                                </div>
+                            </div>
                         </div>
-                        <div class="field-value" id="dv-algorithm" contenteditable="true" onblur="saveField('algorithm', this.textContent)" style="min-height: 60px;"></div>
+                        <div class="info-row">
+                            <span class="info-label">Номер:</span>
+                            <span class="info-value" id="view-number" contenteditable="true" onblur="updateField('number', this.textContent)"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Имя:</span>
+                            <span class="info-value" id="view-name" contenteditable="true" onblur="updateField('name', this.textContent)"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Кодовое имя:</span>
+                            <span class="info-value" id="view-codename" contenteditable="true" onblur="updateField('codename', this.textContent)"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Статус:</span>
+                            <span class="info-value" id="view-status" contenteditable="true" onblur="updateField('status', this.textContent)"></span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-label">Отношение: <span id="view-attitude-percent">50</span>%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="view-attitude-bar" style="width: 50%"></div>
+                            </div>
+                            <input type="range" id="view-attitude-slider" min="0" max="100" value="50" oninput="updateAttitude(this.value)" style="margin-top: 10px;">
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Создано:</span>
+                            <span class="info-value" id="view-created"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Обновлено:</span>
+                            <span class="info-value" id="view-updated"></span>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn btn-danger" onclick="deleteCurrentDossier()">🗑️ Удалить</button>
+                            <button class="btn" onclick="editFullDossier()">✏️ Редактировать всё</button>
+                        </div>
                     </div>
-                    
+
+                    <!-- Right Panel -->
                     <div class="panel">
-                        <div class="panel-title">
-                            <span>️ Опасения</span>
-                            <button class="btn" style="padding: 5px 10px; font-size: 12px;" onclick="addConcern()">+ Добавить</button>
+                        <span class="panel-title">Данные</span>
+                        <div class="form-group">
+                            <label>Алгоритм / Деятельность</label>
+                            <div class="info-value" id="view-algorithm" contenteditable="true" onblur="updateField('algorithm', this.textContent)" style="min-height: 30px; border: none; padding: 10px; background: rgba(0,255,255,0.05);"></div>
                         </div>
-                        <div id="dv-concerns"></div>
-                    </div>
-                    
-                    <div class="panel">
-                        <div class="panel-title">
-                            <span>📝 Заметки</span>
+                        <div class="form-group">
+                            <label>Опасения <button class="btn" onclick="addNote()" style="padding: 2px 8px; font-size: 12px;">+ Добавить</button></label>
+                            <ul class="notes-list" id="view-notes"></ul>
                         </div>
-                        <div class="field-value" id="dv-notes" contenteditable="true" onblur="saveField('notes', this.textContent)" style="min-height: 150px;"></div>
-                    </div>
-                    
-                    <div class="action-buttons">
-                        <button class="btn btn-danger" onclick="deleteCurrentDossier()">️ Удалить досье</button>
-                    </div>
-                    
-                    <div class="timestamps">
-                        <div>Создано: <span id="dv-created"></span></div>
-                        <div>Обновлено: <span id="dv-updated"></span></div>
+                        <div class="form-group">
+                            <label>Заметки</label>
+                            <div class="info-value" id="view-notes-full" contenteditable="true" onblur="updateField('notes', this.innerHTML)" style="min-height: 100px; border: none; padding: 10px; background: rgba(0,255,255,0.05); white-space: pre-wrap;"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- New Dossier Modal -->
-    <div id="new-modal" class="modal-overlay hidden">
-        <div class="modal">
-            <h2 class="modal-title">Новое досье</h2>
-            <form id="new-form" onsubmit="createDossier(event)">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Имя *</label>
-                        <input type="text" class="form-input" id="new-name" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Номер досье</label>
-                        <input type="text" class="form-input" id="new-number" placeholder="???">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Кодовое имя</label>
-                        <input type="text" class="form-input" id="new-codename">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Статус</label>
-                        <select class="form-select" id="new-status">
-                            <option value="alive">Жив</option>
-                            <option value="dead">Мёртв</option>
-                            <option value="missing">Пропал</option>
-                            <option value="unknown">Неизвестно</option>
-                        </select>
-                    </div>
-                </div>
-                
+    <!-- New/Edit Dossier Modal -->
+    <div id="dossier-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Новое досье</h2>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <form id="dossier-form" onsubmit="saveDossier(event)">
+                <input type="hidden" id="form-id">
                 <div class="form-group">
-                    <label class="form-label">URL аватара (необязательно)</label>
-                    <input type="text" class="form-input" id="new-avatar" placeholder="https://...">
+                    <label>Имя *</label>
+                    <input type="text" id="form-name" required>
                 </div>
-                
                 <div class="form-group">
-                    <label class="form-label">Алгоритм / Деятельность</label>
-                    <textarea class="form-textarea" id="new-algorithm"></textarea>
+                    <label>Номер досье</label>
+                    <input type="text" id="form-number" placeholder="???">
                 </div>
-                
                 <div class="form-group">
-                    <label class="form-label">Отношение</label>
-                    <input type="range" id="new-relation" min="0" max="100" value="50" style="width: 100%;">
-                    <div style="text-align: right; font-size: 12px; margin-top: 5px;"><span id="new-relation-text">50</span>%</div>
+                    <label>Кодовое имя</label>
+                    <input type="text" id="form-codename" placeholder="нет">
                 </div>
-                
-                <div class="modal-actions">
-                    <button type="button" class="btn" onclick="closeNewModal()">Отмена</button>
-                    <button type="submit" class="btn btn-success">Создать</button>
+                <div class="form-group">
+                    <label>Статус</label>
+                    <select id="form-status">
+                        <option value="жив">Жив</option>
+                        <option value="мёртв">Мёртв</option>
+                        <option value="пропал">Пропал</option>
+                        <option value="неизвестно">Неизвестно</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Отношение: <span id="form-attitude-value">50</span>%</label>
+                    <input type="range" id="form-attitude" min="0" max="100" value="50" oninput="document.getElementById('form-attitude-value').textContent = this.value">
+                </div>
+                <div class="form-group">
+                    <label>Алгоритм / Деятельность</label>
+                    <textarea id="form-algorithm" placeholder="Описание деятельности..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Опасения (каждое с новой строки)</label>
+                    <textarea id="form-notes" placeholder="Список опасений..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Заметки</label>
+                    <textarea id="form-notes-full" placeholder="Дополнительные заметки..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">💾 Сохранить</button>
+                    <button type="button" class="btn" onclick="closeModal()">Отмена</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        // Storage helpers with error handling
-        function safeGetItem(key) {
-            try {
-                return localStorage.getItem(key);
-            } catch (e) {
-                console.warn('LocalStorage не доступен:', e);
-                return null;
-            }
-        }
-
-        function safeSetItem(key, value) {
-            try {
-                localStorage.setItem(key, value);
-                return true;
-            } catch (e) {
-                console.warn('Не удалось сохранить в LocalStorage:', e);
-                alert('Внимание: Данные не могут быть сохранены. Возможно, включён режим инкогнито или заблокированы куки.');
-                return false;
-            }
-        }
-
-        // Data management
+        // Initialize data
         let dossiers = [];
         let currentDossierId = null;
 
-        function loadDossiers() {
-            const data = safeGetItem('dossiers');
-            if (data) {
-                dossiers = JSON.parse(data);
+        // Load from localStorage
+        function loadData() {
+            const stored = localStorage.getItem('dossiers');
+            if (stored) {
+                dossiers = JSON.parse(stored);
             } else {
                 // Default example dossier
                 dossiers = [{
-                    id: Date.now().toString(),
+                    id: Date.now(),
                     name: 'Мартин',
                     number: '???',
                     codename: 'нет',
-                    status: 'alive',
-                    relation: 50,
-                    avatar: '',
+                    status: 'жив',
+                    attitude: 50,
                     algorithm: 'очищение водосточной трубы',
-                    concerns: [
-                        'Боится, что его сотрёт Империя',
-                        'Делится непроверенными данными'
-                    ],
-                    notes: '',
+                    notes: ['Боится, что его сотрёт Империя', 'Делится непроверенными данными'],
+                    notesFull: '',
+                    avatar: null,
                     created: new Date().toLocaleString('ru-RU'),
                     updated: new Date().toLocaleString('ru-RU')
                 }];
-                saveDossiers();
+                saveData();
             }
+            renderGrid();
         }
 
-        function saveDossiers() {
-            safeSetItem('dossiers', JSON.stringify(dossiers));
+        // Save to localStorage
+        function saveData() {
+            localStorage.setItem('dossiers', JSON.stringify(dossiers));
         }
 
-        function getCurrentDossier() {
-            return dossiers.find(d => d.id === currentDossierId);
-        }
-
-        function saveCurrentDossier() {
-            const dossier = getCurrentDossier();
-            if (dossier) {
-                dossier.updated = new Date().toLocaleString('ru-RU');
-                saveDossiers();
-            }
-        }
-
-        // View functions
-        function showDashboard() {
-            document.getElementById('dashboard-view').classList.remove('hidden');
-            document.getElementById('dossier-view').classList.add('hidden');
-            renderDashboard();
-        }
-
-        function showDossier(id) {
-            currentDossierId = id;
-            document.getElementById('dashboard-view').classList.add('hidden');
-            document.getElementById('dossier-view').classList.remove('hidden');
-            renderDossier();
-        }
-
-        function renderDashboard() {
+        // Render dossier grid
+        function renderGrid() {
             const grid = document.getElementById('dossier-grid');
-            const emptyState = document.getElementById('empty-state');
-
             if (dossiers.length === 0) {
-                grid.classList.add('hidden');
-                emptyState.classList.remove('hidden');
+                grid.innerHTML = '<div class="empty-state"><h2>Нет досье</h2><p>Создайте первое досье</p></div>';
                 return;
             }
-
-            grid.classList.remove('hidden');
-            emptyState.classList.add('hidden');
-
-            grid.innerHTML = dossiers.map(d => `
-                <div class="dossier-card" onclick="showDossier('${d.id}')">
-                    <img class="avatar" src="${d.avatar || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23001828%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22 font-size=%2240%22>?</text></svg>'}" alt="${d.name}">
-                    <h3>${d.name}</h3>
-                    <div class="info">
-                        <div>Номер: ${d.number || '???'}</div>
-                        <div>Кодовое имя: ${d.codename || 'нет'}</div>
-                        <div>Отношение: ${d.relation}%</div>
-                    </div>
-                    <span class="status-badge status-${d.status}">${getStatusText(d.status)}</span>
-                </div>
-            `).join('');
+            grid.innerHTML = dossiers.map(d => {
+                const statusClass = d.status === 'жив' ? 'status-alive' : d.status === 'мёртв' ? 'status-dead' : d.status === 'пропал' ? 'status-missing' : 'status-unknown';
+                return '<div class="dossier-card" onclick="viewDossier(' + d.id + ')">' +
+                    '<h3>' + (d.name || 'Без имени') + '</h3>' +
+                    '<p>Номер: ' + (d.number || '???') + '</p>' +
+                    '<p>Кодовое имя: ' + (d.codename || 'нет') + '</p>' +
+                    '<span class="status-badge ' + statusClass + '">' + d.status + '</span>' +
+                    '</div>';
+            }).join('');
         }
 
-        function renderDossier() {
-            const d = getCurrentDossier();
-            if (!d) return;
+        // View single dossier
+        function viewDossier(id) {
+            const dossier = dossiers.find(d => d.id === id);
+            if (!dossier) return;
+            currentDossierId = id;
 
-            document.getElementById('dv-avatar').src = d.avatar || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 250 250%22><rect fill=%22%23001828%22 width=%22250%22 height=%22250%22/><text x=%22125%22 y=%22135%22 text-anchor=%22middle%22 fill=%22%2300f0ff%22 font-size=%22100%22>?</text></svg>';
-            document.getElementById('dv-name').textContent = d.name;
-            document.getElementById('dv-number').textContent = d.number || '???';
-            document.getElementById('dv-codename').textContent = d.codename || 'нет';
-            document.getElementById('dv-status').value = d.status;
-            document.getElementById('dv-relation').value = d.relation;
-            document.getElementById('dv-algorithm').textContent = d.algorithm || '';
-            document.getElementById('dv-notes').textContent = d.notes || '';
-            document.getElementById('dv-created').textContent = d.created;
-            document.getElementById('dv-updated').textContent = d.updated;
+            document.getElementById('dossier-grid').classList.add('hidden');
+            document.getElementById('dossier-view').classList.remove('hidden');
 
-            updateRelationBar(d.relation);
-            renderConcerns();
+            // Avatar
+            const avatarImg = document.getElementById('view-avatar');
+            const avatarPlaceholder = document.getElementById('view-avatar-placeholder');
+            if (dossier.avatar) {
+                avatarImg.src = dossier.avatar;
+                avatarImg.classList.remove('hidden');
+                avatarPlaceholder.classList.add('hidden');
+            } else {
+                avatarImg.classList.add('hidden');
+                avatarPlaceholder.classList.remove('hidden');
+            }
+
+            // Info
+            document.getElementById('view-number').textContent = dossier.number || '???';
+            document.getElementById('view-name').textContent = dossier.name || 'Без имени';
+            document.getElementById('view-codename').textContent = dossier.codename || 'нет';
+            document.getElementById('view-status').textContent = dossier.status;
+            document.getElementById('view-algorithm').textContent = dossier.algorithm || '';
+            document.getElementById('view-notes-full').innerHTML = dossier.notesFull || '';
+
+            // Attitude
+            document.getElementById('view-attitude-percent').textContent = dossier.attitude;
+            document.getElementById('view-attitude-bar').style.width = dossier.attitude + '%';
+            document.getElementById('view-attitude-slider').value = dossier.attitude;
+
+            // Dates
+            document.getElementById('view-created').textContent = dossier.created;
+            document.getElementById('view-updated').textContent = dossier.updated;
+
+            // Notes
+            renderNotes(dossier.notes);
         }
 
-        function renderConcerns() {
-            const d = getCurrentDossier();
-            if (!d) return;
-
-            const container = document.getElementById('dv-concerns');
-            if (!d.concerns || d.concerns.length === 0) {
-                container.innerHTML = '<div style="opacity: 0.5; font-style: italic;">Нет опасений</div>';
+        // Render notes list
+        function renderNotes(notes) {
+            const list = document.getElementById('view-notes');
+            if (!notes || notes.length === 0) {
+                list.innerHTML = '<li style="opacity: 0.5;">Нет опасений</li>';
                 return;
             }
-
-            container.innerHTML = d.concerns.map((c, i) => `
-                <div class="list-item">
-                    <span class="list-item-text">${c}</span>
-                    <button class="list-item-delete" onclick="deleteConcern(${i})">✕</button>
-                </div>
-            `).join('');
+            list.innerHTML = notes.map((note, index) => 
+                '<li><span>' + note + '</span><button onclick="removeNote(' + index + ')">×</button></li>'
+            ).join('');
         }
 
-        function getStatusText(status) {
-            const statuses = {
-                alive: 'Жив',
-                dead: 'Мёртв',
-                missing: 'Пропал',
-                unknown: 'Неизвестно'
-            };
-            return statuses[status] || status;
+        // Update field
+        function updateField(field, value) {
+            const dossier = dossiers.find(d => d.id === currentDossierId);
+            if (!dossier) return;
+            dossier[field] = value;
+            dossier.updated = new Date().toLocaleString('ru-RU');
+            saveData();
+            renderGrid();
         }
 
-        // Edit functions
-        function saveField(field, value) {
-            const d = getCurrentDossier();
-            if (d) {
-                d[field] = value;
-                saveCurrentDossier();
-                renderDashboard();
-            }
+        // Update attitude
+        function updateAttitude(value) {
+            const dossier = dossiers.find(d => d.id === currentDossierId);
+            if (!dossier) return;
+            dossier.attitude = parseInt(value);
+            dossier.updated = new Date().toLocaleString('ru-RU');
+            document.getElementById('view-attitude-percent').textContent = value;
+            document.getElementById('view-attitude-bar').style.width = value + '%';
+            saveData();
+            renderGrid();
         }
 
-        function updateRelationBar(value) {
-            document.getElementById('dv-relation-bar').style.width = value + '%';
-            document.getElementById('dv-relation-text').textContent = value;
+        // Add note
+        function addNote() {
+            const note = prompt('Введите опасение:');
+            if (!note) return;
+            const dossier = dossiers.find(d => d.id === currentDossierId);
+            if (!dossier) return;
+            if (!dossier.notes) dossier.notes = [];
+            dossier.notes.push(note);
+            dossier.updated = new Date().toLocaleString('ru-RU');
+            saveData();
+            renderNotes(dossier.notes);
+            renderGrid();
         }
 
-        function addConcern() {
-            const text = prompt('Введите опасение:');
-            if (text && text.trim()) {
-                const d = getCurrentDossier();
-                if (d) {
-                    if (!d.concerns) d.concerns = [];
-                    d.concerns.push(text.trim());
-                    saveCurrentDossier();
-                    renderConcerns();
-                }
-            }
+        // Remove note
+        function removeNote(index) {
+            const dossier = dossiers.find(d => d.id === currentDossierId);
+            if (!dossier) return;
+            dossier.notes.splice(index, 1);
+            dossier.updated = new Date().toLocaleString('ru-RU');
+            saveData();
+            renderNotes(dossier.notes);
+            renderGrid();
         }
 
-        function deleteConcern(index) {
-            const d = getCurrentDossier();
-            if (d && d.concerns) {
-                d.concerns.splice(index, 1);
-                saveCurrentDossier();
-                renderConcerns();
-            }
-        }
-
-        function uploadAvatar(event) {
+        // Handle avatar upload
+        function handleAvatarUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
-                const d = getCurrentDossier();
-                if (d) {
-                    d.avatar = e.target.result;
-                    saveCurrentDossier();
-                    document.getElementById('dv-avatar').src = d.avatar;
-                    renderDashboard();
-                }
+                const dossier = dossiers.find(d => d.id === currentDossierId);
+                if (!dossier) return;
+                dossier.avatar = e.target.result;
+                dossier.updated = new Date().toLocaleString('ru-RU');
+                saveData();
+                viewDossier(currentDossierId);
             };
             reader.readAsDataURL(file);
         }
 
-        function deleteCurrentDossier() {
-            if (confirm('Вы уверены, что хотите удалить это досье? Это действие нельзя отменить.')) {
-                dossiers = dossiers.filter(d => d.id !== currentDossierId);
-                saveDossiers();
-                showDashboard();
+        // Show home
+        function showHome() {
+            document.getElementById('dossier-view').classList.add('hidden');
+            document.getElementById('dossier-grid').classList.remove('hidden');
+            currentDossierId = null;
+        }
+
+        // Show new dossier form
+        function showNewDossierForm() {
+            document.getElementById('modal-title').textContent = 'Новое досье';
+            document.getElementById('dossier-form').reset();
+            document.getElementById('form-id').value = '';
+            document.getElementById('dossier-modal').classList.remove('hidden');
+        }
+
+        // Edit full dossier
+        function editFullDossier() {
+            const dossier = dossiers.find(d => d.id === currentDossierId);
+            if (!dossier) return;
+            document.getElementById('modal-title').textContent = 'Редактировать досье';
+            document.getElementById('form-id').value = dossier.id;
+            document.getElementById('form-name').value = dossier.name || '';
+            document.getElementById('form-number').value = dossier.number || '';
+            document.getElementById('form-codename').value = dossier.codename || '';
+            document.getElementById('form-status').value = dossier.status || 'жив';
+            document.getElementById('form-attitude').value = dossier.attitude || 50;
+            document.getElementById('form-attitude-value').textContent = dossier.attitude || 50;
+            document.getElementById('form-algorithm').value = dossier.algorithm || '';
+            document.getElementById('form-notes').value = (dossier.notes || []).join('\n');
+            document.getElementById('form-notes-full').value = dossier.notesFull || '';
+            document.getElementById('dossier-modal').classList.remove('hidden');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('dossier-modal').classList.add('hidden');
+        }
+
+        // Save dossier
+        function saveDossier(event) {
+            event.preventDefault();
+            const id = document.getElementById('form-id').value;
+            const notesText = document.getElementById('form-notes').value;
+            const notes = notesText ? notesText.split('\n').filter(n => n.trim()) : [];
+
+            if (id) {
+                // Edit existing
+                const dossier = dossiers.find(d => d.id === parseInt(id));
+                if (dossier) {
+                    dossier.name = document.getElementById('form-name').value;
+                    dossier.number = document.getElementById('form-number').value;
+                    dossier.codename = document.getElementById('form-codename').value;
+                    dossier.status = document.getElementById('form-status').value;
+                    dossier.attitude = parseInt(document.getElementById('form-attitude').value);
+                    dossier.algorithm = document.getElementById('form-algorithm').value;
+                    dossier.notes = notes;
+                    dossier.notesFull = document.getElementById('form-notes-full').value;
+                    dossier.updated = new Date().toLocaleString('ru-RU');
+                }
+            } else {
+                // Create new
+                const newDossier = {
+                    id: Date.now(),
+                    name: document.getElementById('form-name').value,
+                    number: document.getElementById('form-number').value,
+                    codename: document.getElementById('form-codename').value,
+                    status: document.getElementById('form-status').value,
+                    attitude: parseInt(document.getElementById('form-attitude').value),
+                    algorithm: document.getElementById('form-algorithm').value,
+                    notes: notes,
+                    notesFull: document.getElementById('form-notes-full').value,
+                    avatar: null,
+                    created: new Date().toLocaleString('ru-RU'),
+                    updated: new Date().toLocaleString('ru-RU')
+                };
+                dossiers.push(newDossier);
+            }
+            saveData();
+            closeModal();
+            renderGrid();
+            if (id) {
+                viewDossier(parseInt(id));
             }
         }
 
-        // Modal functions
-        function openNewDossierModal() {
-            document.getElementById('new-modal').classList.remove('hidden');
-            document.getElementById('new-form').reset();
-            document.getElementById('new-relation-text').textContent = '50';
+        // Delete current dossier
+        function deleteCurrentDossier() {
+            if (!confirm('Удалить это досье?')) return;
+            dossiers = dossiers.filter(d => d.id !== currentDossierId);
+            saveData();
+            showHome();
+            renderGrid();
         }
-
-        function closeNewModal() {
-            document.getElementById('new-modal').classList.add('hidden');
-        }
-
-        function createDossier(event) {
-            event.preventDefault();
-
-            const newDossier = {
-                id: Date.now().toString(),
-                name: document.getElementById('new-name').value,
-                number: document.getElementById('new-number').value || '???',
-                codename: document.getElementById('new-codename').value || 'нет',
-                status: document.getElementById('new-status').value,
-                relation: parseInt(document.getElementById('new-relation').value),
-                avatar: document.getElementById('new-avatar').value || '',
-                algorithm: document.getElementById('new-algorithm').value || '',
-                concerns: [],
-                notes: '',
-                created: new Date().toLocaleString('ru-RU'),
-                updated: new Date().toLocaleString('ru-RU')
-            };
-
-            dossiers.push(newDossier);
-            saveDossiers();
-            closeNewModal();
-            showDossier(newDossier.id);
-        }
-
-        // Range slider text update
-        document.getElementById('new-relation')?.addEventListener('input', function() {
-            document.getElementById('new-relation-text').textContent = this.value;
-        });
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            loadDossiers();
-            renderDashboard();
-        });
+        loadData();
     </script>
 </body>
 </html>
