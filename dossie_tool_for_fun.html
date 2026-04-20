@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система Досье</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00ffff;
+            --primary-dim: #008b8b;
+            --secondary: #ff00ff;
+            --bg-dark: #0a0f14;
+            --bg-panel: #0d1a24;
+            --text-main: #e0f0f0;
+            --text-dim: #6a8a9a;
+            --danger: #ff4444;
+            --success: #44ff44;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Scan lines effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1) 0px,
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* CRT flicker */
+        @keyframes flicker {
+            0% { opacity: 0.97; }
+            50% { opacity: 1; }
+            100% { opacity: 0.98; }
+        }
+
+        .app-container {
+            animation: flicker 0.15s infinite;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(180deg, var(--bg-panel) 0%, transparent 100%);
+            border-bottom: 2px solid var(--primary);
+            padding: 20px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .header h1 {
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+            font-size: 1.8rem;
+            letter-spacing: 3px;
+        }
+
+        .header-nav {
+            margin-top: 10px;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .btn-danger {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 0 15px var(--danger);
+        }
+
+        .btn-success {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .btn-success:hover {
+            background: var(--success);
+            color: var(--bg-dark);
+            box-shadow: 0 0 15px var(--success);
+        }
+
+        /* Main content */
+        .main-content {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Grid layout for dossier */
+        .dossier-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .dossier-bottom {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Panels */
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--primary-dim);
+            position: relative;
+            padding: 15px;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            width: 20px;
+            height: 20px;
+            border-top: 2px solid var(--primary);
+            border-left: 2px solid var(--primary);
+        }
+
+        .panel::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            right: -1px;
+            width: 20px;
+            height: 20px;
+            border-bottom: 2px solid var(--primary);
+            border-right: 2px solid var(--primary);
+        }
+
+        .panel-header {
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--primary-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Avatar section */
+        .avatar-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .avatar-frame {
+            width: 200px;
+            height: 200px;
+            border: 2px solid var(--primary);
+            margin: 0 auto 10px;
+            overflow: hidden;
+            background: #000;
+            position: relative;
+        }
+
+        .avatar-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dim);
+            font-size: 3rem;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Info fields */
+        .info-row {
+            margin-bottom: 12px;
+        }
+
+        .info-label {
+            color: var(--primary);
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            color: var(--text-main);
+            font-size: 1rem;
+            padding: 8px;
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid var(--primary-dim);
+            min-height: 35px;
+        }
+
+        .info-value.editable {
+            cursor: pointer;
+        }
+
+        .info-value.editable:hover {
+            border-color: var(--primary);
+            background: rgba(0, 255, 255, 0.1);
+        }
+
+        .info-value input, .info-value textarea, .info-value select {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            padding: 5px;
+        }
+
+        .info-value input:focus, .info-value textarea:focus, .info-value select:focus {
+            outline: none;
+            border-bottom: 1px solid var(--primary);
+        }
+
+        .info-value textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Progress bar */
+        .progress-container {
+            width: 100%;
+            height: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--primary-dim);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-dim), var(--primary));
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.75rem;
+            color: var(--text-main);
+            text-shadow: 1px 1px 2px black;
+        }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 3px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-alive {
+            background: rgba(68, 255, 68, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-dead {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .status-missing {
+            background: rgba(255, 170, 0, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .status-unknown {
+            background: rgba(100, 100, 100, 0.2);
+            color: var(--text-dim);
+            border: 1px solid var(--text-dim);
+        }
+
+        /* Bullet list */
+        .bullet-list {
+            list-style: none;
+        }
+
+        .bullet-list li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        .bullet-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        .bullet-list li:last-child {
+            border-bottom: none;
+        }
+
+        .bullet-list textarea {
+            width: 100%;
+            min-height: 60px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--primary-dim);
+            color: var(--text-main);
+            font-family: 'Courier New', monospace;
+            padding: 8px;
+            resize: vertical;
+        }
+
+        /* Dashboard grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .dossier-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--primary-dim);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dossier-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .dossier-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .dossier-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .dossier-card-title {
+            color: var(--primary);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+
+        .dossier-card-id {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        .dossier-card-avatar {
+            width: 80px;
+            height: 80px;
+            border: 1px solid var(--primary-dim);
+            margin: 0 auto 15px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .dossier-card-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dossier-card-info {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .dossier-card-info p {
+            margin: 5px 0;
+        }
+
+        .dossier-card-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .dossier-card-actions .btn {
+            flex: 1;
+            font-size: 0.8rem;
+            padding: 6px 10px;
+        }
+
+        /* Navigation */
+        .nav-breadcrumb {
+            margin-bottom: 20px;
+        }
+
+        .nav-breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .nav-breadcrumb span {
+            color: var(--text-dim);
+            margin: 0 10px;
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--primary-dim);
+            color: var(--text-main);
+            font-family: 'Courier New', monospace;
+            padding: 12px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Action buttons */
+        .action-bar {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--primary-dim);
+        }
+
+        /* Glitch effect */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .glitch {
+            animation: glitch 0.5s infinite;
+            display: inline-block;
+        }
+
+        /* Hidden sections */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .dossier-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dossier-bottom {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Add item button */
+        .add-item-btn {
+            background: transparent;
+            border: 1px dashed var(--primary-dim);
+            color: var(--primary-dim);
+            padding: 10px;
+            width: 100%;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .add-item-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        .remove-item-btn {
+            background: transparent;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            padding: 5px;
+            font-size: 1.2rem;
+            float: right;
+        }
+
+        .remove-item-btn:hover {
+            color: #ff6666;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-dim);
+        }
+
+        .empty-state h2 {
+            color: var(--primary-dim);
+            margin-bottom: 20px;
+        }
+
+        .empty-state .btn {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1><span class="glitch">◆ СИСТЕМА ДОСЬЕ ◆</span></h1>
+            <nav class="header-nav" id="headerNav"></nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent"></main>
+    </div>
+
+    <script>
+        // ==================== DATA MANAGEMENT ====================
+        
+        let dossiers = [];
+        let currentView = 'dashboard';
+        let currentDossierId = null;
+
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('dossierData');
+            if (saved) {
+                dossiers = JSON.parse(saved);
+            } else {
+                // Default sample data
+                dossiers = [
+                    {
+                        id: 'DX-001',
+                        name: 'Мартин',
+                        avatar: null,
+                        codeName: 'нет',
+                        number: '???',
+                        relation: 50,
+                        status: 'alive',
+                        algorithm: 'очищение водосточной трубы',
+                        fears: ['Боится, что его сотрет Империя', 'Делится непроверенными данными'],
+                        notes: 'Объект проявляет признаки паранойи. Требует наблюдения.',
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    }
+                ];
+                saveData();
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('dossierData', JSON.stringify(dossiers));
+        }
+
+        // Generate unique ID
+        function generateId() {
+            const num = dossiers.length + 1;
+            return `DX-${String(num).padStart(3, '0')}`;
+        }
+
+        // ==================== NAVIGATION ====================
+
+        function navigate(view, id = null) {
+            currentView = view;
+            currentDossierId = id;
+            render();
+            window.scrollTo(0, 0);
+        }
+
+        // ==================== RENDERING ====================
+
+        function render() {
+            renderHeader();
+            renderMainContent();
+        }
+
+        function renderHeader() {
+            const nav = document.getElementById('headerNav');
+            if (currentView === 'dashboard') {
+                nav.innerHTML = `
+                    <button class="btn btn-success" onclick="navigate('create')">+ Новое досье</button>
+                `;
+            } else {
+                nav.innerHTML = `
+                    <button class="btn" onclick="navigate('dashboard')">← Назад к списку</button>
+                `;
+            }
+        }
+
+        function renderMainContent() {
+            const main = document.getElementById('mainContent');
+            
+            if (currentView === 'dashboard') {
+                renderDashboard(main);
+            } else if (currentView === 'view') {
+                renderDossierView(main);
+            } else if (currentView === 'create' || currentView === 'edit') {
+                renderDossierForm(main);
+            }
+        }
+
+        // ==================== DASHBOARD ====================
+
+        function renderDashboard(container) {
+            if (dossiers.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h2>◆ БАЗА ДАННЫХ ПУСТА ◆</h2>
+                        <p>Нет активных досье в системе</p>
+                        <button class="btn btn-success" onclick="navigate('create')">+ Создать первое досье</button>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div class="dashboard-grid">';
+            
+            dossiers.forEach(dossier => {
+                const statusClass = `status-${dossier.status}`;
+                const statusText = getStatusText(dossier.status);
+                const relationLabel = getRelationLabel(dossier.relation);
+                
+                html += `
+                    <div class="dossier-card" onclick="navigate('view', '${dossier.id}')">
+                        <div class="dossier-card-header">
+                            <span class="dossier-card-title">${dossier.name}</span>
+                            <span class="dossier-card-id">${dossier.id}</span>
+                        </div>
+                        <div class="dossier-card-avatar">
+                            ${dossier.avatar 
+                                ? `<img src="${dossier.avatar}" alt="${dossier.name}">`
+                                : '<div class="avatar-placeholder">?</div>'
+                            }
+                        </div>
+                        <div class="dossier-card-info">
+                            <p><strong>Код:</strong> ${dossier.codeName || '—'}</p>
+                            <p><strong>Отношение:</strong> ${relationLabel}</p>
+                            <p><span class="status-badge ${statusClass}">${statusText}</span></p>
+                        </div>
+                        <div class="dossier-card-actions">
+                            <button class="btn" onclick="event.stopPropagation(); navigate('view', '${dossier.id}')">Открыть</button>
+                            <button class="btn btn-danger" onclick="event.stopPropagation(); deleteDossier('${dossier.id}')">Удалить</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // ==================== DOSSIER VIEW ====================
+
+        function renderDossierView(container) {
+            const dossier = dossiers.find(d => d.id === currentDossierId);
+            
+            if (!dossier) {
+                container.innerHTML = '<div class="empty-state"><h2>ДОСЬЕ НЕ НАЙДЕНО</h2></div>';
+                return;
+            }
+
+            const statusClass = `status-${dossier.status}`;
+            const statusText = getStatusText(dossier.status);
+
+            container.innerHTML = `
+                <div class="nav-breadcrumb">
+                    <a href="#" onclick="navigate('dashboard'); return false;">Главная</a>
+                    <span>◆</span>
+                    <span>${dossier.id}</span>
+                </div>
+
+                <div class="dossier-grid">
+                    <!-- Left Panel - Avatar & Basic Info -->
+                    <div class="panel">
+                        <div class="panel-header">◆ ${dossier.name}</div>
+                        
+                        <div class="avatar-container">
+                            <div class="avatar-frame">
+                                ${dossier.avatar 
+                                    ? `<img src="${dossier.avatar}" alt="${dossier.name}">`
+                                    : '<div class="avatar-placeholder">?</div>'
+                                }
+                            </div>
+                            <div class="file-input-wrapper">
+                                <button class="btn">Загрузить фото</button>
+                                <input type="file" accept="image/*" onchange="uploadAvatar(this, '${dossier.id}')">
+                            </div>
+                        </div>
+
+                        <div class="info-row">
+                            <div class="info-label">Номер</div>
+                            <div class="info-value" onclick="editField('${dossier.id}', 'number')">${dossier.number || '—'}</div>
+                        </div>
+
+                        <div class="info-row">
+                            <div class="info-label">Кодовое имя</div>
+                            <div class="info-value" onclick="editField('${dossier.id}', 'codeName')">${dossier.codeName || '—'}</div>
+                        </div>
+
+                        <div class="info-row">
+                            <div class="info-label">Отношение</div>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: ${dossier.relation}%"></div>
+                                <span class="progress-text">${dossier.relation}%</span>
+                            </div>
+                            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="editRelation('${dossier.id}')">Изменить</button>
+                        </div>
+
+                        <div class="info-row">
+                            <div class="info-label">Статус</div>
+                            <div class="info-value">
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </div>
+                            <button class="btn" style="width: 100%; margin-top: 10px;" onclick="editStatus('${dossier.id}')">Изменить</button>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel - Algorithm -->
+                    <div class="panel">
+                        <div class="panel-header">Алгоритм: <span onclick="editField('${dossier.id}', 'algorithm')" class="info-value editable" style="display: inline; padding: 5px 10px;">${dossier.algorithm || 'не указан'}</span></div>
+                        <div style="color: var(--text-dim); font-size: 0.9rem; margin-top: 20px;">
+                            <p>Последнее обновление: ${formatDate(dossier.updatedAt)}</p>
+                            <p>Создано: ${formatDate(dossier.createdAt)}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dossier-bottom">
+                    <!-- Fears Panel -->
+                    <div class="panel">
+                        <div class="panel-header">◆ Опасения / Заметки</div>
+                        <ul class="bullet-list" id="fearsList">
+                            ${dossier.fears.map((fear, index) => `
+                                <li>
+                                    ${fear}
+                                    <button class="remove-item-btn" onclick="removeFear('${dossier.id}', ${index})">×</button>
+                                </li>
+                            `).join('')}
+                        </ul>
+                        <button class="add-item-btn" onclick="addFear('${dossier.id}')">+ Добавить опасение</button>
+                    </div>
+
+                    <!-- Notes Panel -->
+                    <div class="panel">
+                        <div class="panel-header">◆ Дополнительные заметки</div>
+                        <div class="info-value" onclick="editField('${dossier.id}', 'notes')" style="min-height: 150px; cursor: pointer;">
+                            ${dossier.notes || 'Нет заметок...'}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn btn-success" onclick="navigate('edit', '${dossier.id}')"> Редактировать всё</button>
+                    <button class="btn btn-danger" onclick="deleteDossier('${dossier.id}')">🗑 Удалить досье</button>
+                </div>
+            `;
+        }
+
+        // ==================== DOSSIER FORM ====================
+
+        function renderDossierForm(container) {
+            const isEdit = currentView === 'edit';
+            const dossier = isEdit ? dossiers.find(d => d.id === currentDossierId) : null;
+
+            container.innerHTML = `
+                <div class="nav-breadcrumb">
+                    <a href="#" onclick="navigate('dashboard'); return false;">Главная</a>
+                    <span>◆</span>
+                    <span>${isEdit ? 'Редактирование' : 'Новое досье'}</span>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">${isEdit ? '✎ Редактирование досье' : '+ Новое досье'}</div>
+                    
+                    <form id="dossierForm" onsubmit="saveDossier(event)">
+                        <input type="hidden" name="id" value="${dossier ? dossier.id : ''}">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Имя / Позывной</label>
+                                <input type="text" name="name" value="${dossier ? dossier.name : ''}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Номер досье</label>
+                                <input type="text" name="number" value="${dossier ? dossier.number : ''}" placeholder="???">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Кодовое имя</label>
+                                <input type="text" name="codeName" value="${dossier ? dossier.codeName : ''}" placeholder="нет">
+                            </div>
+                            <div class="form-group">
+                                <label>Статус</label>
+                                <select name="status">
+                                    <option value="alive" ${dossier && dossier.status === 'alive' ? 'selected' : ''}>ЖИВ</option>
+                                    <option value="dead" ${dossier && dossier.status === 'dead' ? 'selected' : ''}>МЁРТВ</option>
+                                    <option value="missing" ${dossier && dossier.status === 'missing' ? 'selected' : ''}>ПРОПАЛ</option>
+                                    <option value="unknown" ${dossier && dossier.status === 'unknown' ? 'selected' : ''}>НЕИЗВЕСТНО</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Алгоритм / Деятельность</label>
+                            <input type="text" name="algorithm" value="${dossier ? dossier.algorithm : ''}" placeholder="очищение водосточной трубы">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Отношение (%)</label>
+                            <input type="range" name="relation" min="0" max="100" value="${dossier ? dossier.relation : 50}" oninput="this.nextElementSibling.value = this.value + '%'">
+                            <output style="color: var(--primary); margin-left: 10px;">${dossier ? dossier.relation : 50}%</output>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Фотография</label>
+                            <input type="file" accept="image/*" id="avatarInput" onchange="previewAvatar(this)">
+                            <input type="hidden" name="avatar" value="${dossier ? dossier.avatar : ''}">
+                            <div id="avatarPreview" style="margin-top: 10px;">
+                                ${dossier && dossier.avatar 
+                                    ? `<img src="${dossier.avatar}" style="max-width: 200px; border: 1px solid var(--primary);">`
+                                    : ''
+                                }
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Опасения (каждое с новой строки)</label>
+                            <textarea name="fears" placeholder="Боится, что его сотрет Империя&#10;Делится непроверенными данными">${dossier ? dossier.fears.join('\n') : ''}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Дополнительные заметки</label>
+                            <textarea name="notes" placeholder="Введите заметки...">${dossier ? dossier.notes : ''}</textarea>
+                        </div>
+
+                        <div class="action-bar">
+                            <button type="submit" class="btn btn-success">💾 Сохранить</button>
+                            <button type="button" class="btn" onclick="navigate('dashboard')">Отмена</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+        }
+
+        // ==================== DATA OPERATIONS ====================
+
+        function saveDossier(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            const data = {
+                id: formData.get('id') || generateId(),
+                name: formData.get('name'),
+                number: formData.get('number'),
+                codeName: formData.get('codeName'),
+                status: formData.get('status'),
+                algorithm: formData.get('algorithm'),
+                relation: parseInt(formData.get('relation')),
+                avatar: formData.get('avatar'),
+                fears: formData.get('fears').split('\n').filter(f => f.trim()),
+                notes: formData.get('notes'),
+                createdAt: currentView === 'edit' 
+                    ? dossiers.find(d => d.id === currentDossierId).createdAt 
+                    : new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+
+            if (currentView === 'edit') {
+                const index = dossiers.findIndex(d => d.id === currentDossierId);
+                dossiers[index] = data;
+            } else {
+                dossiers.push(data);
+            }
+
+            saveData();
+            navigate('view', data.id);
+        }
+
+        function deleteDossier(id) {
+            if (confirm('Вы уверены, что хотите удалить это досье?')) {
+                dossiers = dossiers.filter(d => d.id !== id);
+                saveData();
+                navigate('dashboard');
+            }
+        }
+
+        // ==================== AVATAR UPLOAD ====================
+
+        function uploadAvatar(input, dossierId) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const dossier = dossiers.find(d => d.id === dossierId);
+                dossier.avatar = e.target.result;
+                dossier.updatedAt = new Date().toISOString();
+                saveData();
+                render();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function previewAvatar(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatarPreview').innerHTML = 
+                    `<img src="${e.target.result}" style="max-width: 200px; border: 1px solid var(--primary);">`;
+                document.querySelector('input[name="avatar"]').value = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ==================== INLINE EDITING ====================
+
+        function editField(dossierId, field) {
+            const dossier = dossiers.find(d => d.id === dossierId);
+            const newValue = prompt(`Введите новое значение для "${field}":`, dossier[field] || '');
+            
+            if (newValue !== null) {
+                dossier[field] = newValue;
+                dossier.updatedAt = new Date().toISOString();
+                saveData();
+                render();
+            }
+        }
+
+        function editRelation(dossierId) {
+            const dossier = dossiers.find(d => d.id === dossierId);
+            const newValue = prompt(`Введите отношение (0-100):`, dossier.relation);
+            
+            if (newValue !== null) {
+                const num = parseInt(newValue);
+                if (!isNaN(num) && num >= 0 && num <= 100) {
+                    dossier.relation = num;
+                    dossier.updatedAt = new Date().toISOString();
+                    saveData();
+                    render();
+                } else {
+                    alert('Введите число от 0 до 100');
+                }
+            }
+        }
+
+        function editStatus(dossierId) {
+            const dossier = dossiers.find(d => d.id === dossierId);
+            const statuses = {
+                'alive': 'ЖИВ',
+                'dead': 'МЁРТВ',
+                'missing': 'ПРОПАЛ',
+                'unknown': 'НЕИЗВЕСТНО'
+            };
+            
+            let statusText = 'Выберите статус:\n';
+            Object.entries(statuses).forEach(([key, value]) => {
+                statusText += `\n${key.toUpperCase()} - ${value}`;
+            });
+            statusText += `\n\nВведите статус (alive/dead/missing/unknown):`;
+            
+            const newValue = prompt(statusText, dossier.status);
+            
+            if (newValue !== null && statuses[newValue.toLowerCase()]) {
+                dossier.status = newValue.toLowerCase();
+                dossier.updatedAt = new Date().toISOString();
+                saveData();
+                render();
+            } else if (newValue !== null) {
+                alert('Неверный статус. Используйте: alive, dead, missing, unknown');
+            }
+        }
+
+        // ==================== FEARS MANAGEMENT ====================
+
+        function addFear(dossierId) {
+            const fear = prompt('Введите опасение:');
+            if (fear && fear.trim()) {
+                const dossier = dossiers.find(d => d.id === dossierId);
+                dossier.fears.push(fear.trim());
+                dossier.updatedAt = new Date().toISOString();
+                saveData();
+                render();
+            }
+        }
+
+        function removeFear(dossierId, index) {
+            if (confirm('Удалить эту запись?')) {
+                const dossier = dossiers.find(d => d.id === dossierId);
+                dossier.fears.splice(index, 1);
+                dossier.updatedAt = new Date().toISOString();
+                saveData();
+                render();
+            }
+        }
+
+        // ==================== HELPERS ====================
+
+        function getStatusText(status) {
+            const statuses = {
+                'alive': 'ЖИВ',
+                'dead': 'МЁРТВ',
+                'missing': 'ПРОПАЛ',
+                'unknown': 'НЕИЗВЕСТНО'
+            };
+            return statuses[status] || 'НЕИЗВЕСТНО';
+        }
+
+        function getRelationLabel(relation) {
+            if (relation >= 80) return 'ДРУЖЕЛЮБНО';
+            if (relation >= 60) return 'ПОЛОЖИТЕЛЬНО';
+            if (relation >= 40) return 'НЕЙТРАЛЬНО';
+            if (relation >= 20) return 'НЕГАТИВНО';
+            return 'ВРАЖДЕБНО';
+        }
+
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'});
+        }
+
+        // ==================== INITIALIZATION ====================
+
+        loadData();
+        render();
+    </script>
+</body>
+</html>
